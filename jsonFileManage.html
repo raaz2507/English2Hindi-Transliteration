@@ -7,22 +7,23 @@
 </head>
 <style>
     * {
-        /* margin:0; */
-        /* padding:0; */
-        border: 1px solid red;
+        margin:0;
+        padding:0;
+        
     }
     body{
         margin: 0;
         height: 100vh;
         width:100vw;
         box-sizing:border-box;
-        background-color: pink;
+        background-color:rgb(236, 236, 236);
     }
     #contaner{
         width : 95vw;
         height: 95vh;
         box-sizing:border-box;
-        background-color:blueviolet;
+        
+        background-color: pink;
         border-radius: 1em;
         padding: 2em;
     }
@@ -32,11 +33,15 @@
         height:70%;
         box-sizing: border-box;
         border: 1px solid rgb(255, 44, 44) ;
+        background-color: rgb(194, 255, 192);
         border-radius: 2em;
     }
     #control button{
         margin: 2em;
         padding:2em;
+        background-color: rgba(186, 247, 65, 0.482);
+        border-radius: 1em;
+        color:rgb(0, 0, 0);
     }
     #text-Area{
         width:80%;
@@ -112,8 +117,41 @@
     openBtn.addEventListener("change",openFile);
     ShortBtn.addEventListener('click', ShortJSON);
     function ShortJSON(){
-        ShortTextArea.value= JSON.stringify(preJOSNData);
+        ShortedJSONData =JSON.stringify(preJOSNData);
+        ShortTextArea.value = ShortedJSONData;
     }
+    //JSON के keys को अल्फाबेटिकल ऑर्डर में sort करना:
+    function sortJsonByKey(jsonData) {
+    const sortedData = {};
+    Object.keys(jsonData).sort().forEach(key => {
+        sortedData[key] = jsonData[key];
+    });
+    return sortedData;
+    }
+
+    //Inner Keys को भी Sort करना
+    function deepSortJson(jsonData) {
+    const sortedData = {};
+    Object.keys(jsonData).sort().forEach(key => {
+        if (typeof jsonData[key] === 'object' && !Array.isArray(jsonData[key])) {
+            sortedData[key] = deepSortJson(jsonData[key]);  // Recursive call
+        } else {
+            sortedData[key] = jsonData[key];
+        }
+    });
+    return sortedData;
+    }
+    //Values के आधार पर Sort करना
+    function sortJsonByValue(jsonData) {
+    const sortedData = {};
+    Object.entries(jsonData)
+        .sort((a, b) => a[1].localeCompare(b[1]))
+        .forEach(([key, value]) => {
+            sortedData[key] = value;
+        });
+    return sortedData;
+    }
+
     function openFile(event){
         const file = event.target.files[0];
             if (file && file.type === "application/json") {
