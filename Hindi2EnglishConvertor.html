@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>English2Hindi</title>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+				/* box-sizing:border-box; */
+			}
+			html,
+			body {
+				width: 100%;
+			}
+			#contener {
+				border: solid 2px red;
+				border-radius: 0.5em;
+				margin: 1em auto;
+				padding: 1em;
+				box-sizing: border-box;
+				width: 90vw;
+				height: 95vh;
+			}
+			header {
+				padding: 1%;
+			}
+			h1 {
+				margin: 2%;
+			}
+			#action-btn button {
+				padding: 1%;
+				margin: 2%;
+			}
+			textarea {
+				padding: 0.2em;
+				width: 46%;
+				height: 90%;
+				max-height: 500px;
+				resize: none;
+				box-sizing: border-box;
+			}
+			/* grid Layout start*/
+			#contener {
+				display: grid;
+				grid-template-rows: auto auto 1fr;
+				grid-template-columns: 1fr;
+				gap: 0.2em;
+				grid-template-areas:
+					"head"
+					"act-btn"
+					"text-area";
+			}
+			header {
+				grid-area: head;
+				/* border:solid 2px red; */
+			}
+			#action-btn {
+				grid-area: act-btn;
+				/* border:solid 2px red; */
+			}
+			#text-area {
+				grid-area: text-area;
+				/* border:solid 2px red; */
+			}
+			/* grid layout end */
+			/* flexbox layout */
+			header {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				/* border:solid 2px red; */
+			}
+			#action-btn {
+				display: flex;
+				flex-flow: row wrap;
+				align-items: center;
+				justify-content: space-around;
+			}
+			#text-area {
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+			}
+			@media (min-width: 1000px) {
+				header {
+					flex-direction: row;
+					justify-content: space-around;
+				}
+				textarea {
+					width: 90%;
+					height: 30%;
+				}
+			}
+			/* flex-box leayout end */
+		</style>
+	</head>
+	<body>
+		<div id="contener">
+			<header>
+				<h1>English2Hindi Transliteration</h1>
+				<label for="Font-Size" id="font-sizeLabel">Font-Size</label>
+				<input
+					type="range"
+					min="10"
+					max="50"
+					value="16"
+					name="Font-Size"
+					id="font-size-range"
+				/>
+			</header>
+
+			<div id="action-btn">
+				<button onclick="pasteText()" id="paste">paste</button>
+				<button onclick="convertText()" id="convert">convert</button>
+				<button onclick="copyText()" id="copy">copy</button>
+			</div>
+			<div id="text-area">
+				<textarea
+					name="input"
+					id="input-text"
+					placeholder="Copy or Enter Your text here."
+				></textarea>
+				<textarea
+					name="output"
+					id="output-text"
+					placeholder="Your Output"
+				></textarea>
+			</div>
+			<footer></footer>
+		</div>
+	</body>
+	<script src="./Hindi2EnglishDic.js"></script>
+	<script>
+		const inputTextBox = document.getElementById("input-text");
+		const outputTextBox = document.getElementById("output-text");
+		const fontsizeBtn = document.getElementById("font-size-range");
+
+		fontsizeBtn.addEventListener("input", () => {
+			inputTextBox.style.fontSize = fontsizeBtn.value + "px";
+			outputTextBox.style.fontSize = fontsizeBtn.value + "px";
+		});
+		function copyText() {
+			navigator.clipboard
+				.writeText(outputTextBox.value)
+				.then(() => {
+					// alert("Text Copied....");
+				})
+				.catch((err) => {
+					console.error(`Error Copying text.: ${err}`);
+					alert(`Error Copying text.: ${err}`);
+				});
+		}
+		function pasteText() {
+			navigator.clipboard
+				.readText()
+				.then((text) => {
+					inputTextBox.value = text;
+				})
+				.catch((err) => {
+					alert(`Error to paste text ${err}`);
+				});
+		}
+		async function fetchJson() {
+			try {
+				const response = await fetch("./Hindi2EnglishDic.json");
+				if (!response.ok) {
+					throw new Error("Network Response was not ok..");
+				}
+				const data = await response.json();
+				return data;
+			} catch (error) {
+				console.error(`There was a problem reading JSON Data ${error}`);
+				return null;
+			}
+		}
+
+		function addSpaceAroundSpecialChars(inputText) {
+			// Special characters को पहचानने के लिए regex
+			const regex = /[.,?!'\-:;\n\t\r]/g;
+
+			// Special characters के चारों ओर space जोड़ना
+			const formattedText = inputText.replace(regex, (match) => ` ${match} `);
+
+			// Multiple spaces को single space में बदलना और extra spaces हटाना
+			return formattedText.replace(/\s+/g, " ").trim();
+		}
+
+		async function convertText() {
+			const dic = dicnory; //await fetchJson();
+			// console.table(dic);
+			const ObjKeys = Object.keys(dic);
+			let inputText = inputTextBox.value;
+
+			inputText = addSpaceAroundSpecialChars(inputText);
+			let notFoundWord = [];
+			if (dic) {
+				let outputText = "";
+				const words = inputText.split(" ");
+				// console.log(typeof words);
+				let matchWord;
+				const specialCharRegex = /[.,?!'\-:;\n\t]/g;
+
+				words.forEach((word) => {
+					const lowerWord = word.toLowerCase(); //.trim(); // Word को lowercase में और trim करना
+					let matchFound = false;
+
+					// Dictionary के हर category में search करना
+					Object.keys(dic).forEach((category) => {
+						if (dic[category][lowerWord]) {
+							outputText += dic[category][lowerWord] + " ";
+							matchFound = true;
+						}
+					});
+
+					// अगर match नहीं मिला तो वही word जोड़ना
+					if (!matchFound && lowerWord !== "") {
+						outputText += word + " ";
+						if (!specialCharRegex.test(lowerWord)) {
+							notFoundWord.push(lowerWord);
+						}
+					}
+				});
+				outputTextBox.value = outputText;
+			} else {
+				console.log("Unable to fetch dic Data");
+			}
+			if (notFoundWord.length > 0) {
+				saveNotFoundWord(notFoundWord);
+			}
+		}
+		function saveNotFoundWord(wordList) {
+			let data = {};
+			wordList.forEach((word) => {
+				data[word] = "";
+			});
+
+			const blob = new Blob([JSON.stringify(data, null, 2)], {
+				type: "application/json",
+			});
+			const url = URL.createObjectURL(blob);
+
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "notFoundWords.json"; // Download file का नाम
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			URL.revokeObjectURL(url);
+		}
+	</script>
+</html>

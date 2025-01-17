@@ -1,0 +1,1 @@
+const EngWord=['too', 'that'];
