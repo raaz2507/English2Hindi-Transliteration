@@ -5,13 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON File Manage</title>
 </head>
-<body>
+<style>
+    * {
+        /* margin:0; */
+        /* padding:0; */
+        border: 1px solid red;
+    }
+    body{
+        margin: 0;
+        height: 100vh;
+        width:100vw;
+        box-sizing:border-box;
+        background-color: pink;
+    }
+    #contaner{
+        width : 95vw;
+        height: 95vh;
+        box-sizing:border-box;
+        background-color:blueviolet;
+        border-radius: 1em;
+        padding: 2em;
+    }
+    #control{
+        padding:2%;
+        margin:1%;
+        height:70%;
+        box-sizing: border-box;
+        border: 1px solid rgb(255, 44, 44) ;
+        border-radius: 2em;
+    }
+    #control button{
+        margin: 2em;
+        padding:2em;
+    }
+    #text-Area{
+        width:80%;
+        height:100%;
+        box-sizing:border-box;
+    }
+    #text-Area textarea{
+        width:50%;
+        height:90%;
+        margin:1%;
+        padding: 2%;
+        resize: none;
+        border-radius: 3%;
+        box-sizing: border-box;
+        background-color: rgb(165, 230, 255);
+    }
     
+    /*FlexBox setup start */
+    body {
+        display: flex;
+        justify-content: center; /* Horizontal Center */
+        align-items: center;    /* Vertical Center */
+    }
+    #contaner{
+        display:flex;
+        justify-content : space-evenly;
+        align-items : center;
+    }
+    #control{
+        display:flex;
+        flex-direction: column;
+        align-items:center;
+        justify-content:space-evenly;
+    }
+    #text-Area{
+        display: flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content:space-evenly;
+    }
+    /*FlexBox setup start*/
+</style>
+<body>
+    <div id="contaner">
+        <div id="control">
+            <label for="Font-size">Font Size</label>
+            <input type="range" name="Font-size" min=10 max=50 id="FontSize">
+            <br>
+            <label for="openFile">Open JSON File.</label>
+            <input type="file" name="openFile" id ="openFile">
+            <button id="Short">Short JSON</button>
+        </div>
+        <div id="text-Area">
+            <textarea placeholder = "Preview JSON Content" id="FilePreview"></textarea>
+            <textarea placeholder = "After change in File" id="ShortdJSON"></textarea>
+        </div>
+    </div>
 </body>
 <script>
-//remove duplicate 
-//read and save into new file
-//shorting in order
+    const fontSize =document.getElementById('FontSize');
+    const openBtn = document.getElementById("openFile");
+    const ShortBtn = document.getElementById("Short");
+    const PreTextArea= document.getElementById('FilePreview');
+    const ShortTextArea= document.getElementById('ShortdJSON');
+
+    let preJOSNData;
+    let ShortedJSONData;
+    fontSize.addEventListener('change', e=>{
+        PreTextArea.style.fontSize = `${e.target.value}px`;
+        ShortTextArea.style.fontSize = `${e.target.value}px`
+    });
+
+    openBtn.addEventListener("change",openFile);
+    ShortBtn.addEventListener('click', ShortJSON);
+    function ShortJSON(){
+        ShortTextArea.value= JSON.stringify(preJOSNData);
+    }
+    function openFile(event){
+        const file = event.target.files[0];
+            if (file && file.type === "application/json") {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preJOSNData = e.target.result;
+                    PreTextArea.value = preJOSNData;
+                };
+                reader.readAsText(file);
+            } else {
+                alert("Please select a valid JSON file.");
+            }
+    }
 
 </script>
 </html>
