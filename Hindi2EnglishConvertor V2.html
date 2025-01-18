@@ -17,37 +17,48 @@
 			#contener {
 				border: solid 2px red;
 				border-radius: 0.5em;
-				margin: 1em auto;
-				padding: 1em;
+				margin: auto;
+				padding: 5%;
 				box-sizing: border-box;
 				width: 98vw;
-				height: 95vh;
+				/* height: 95vh; */
+				background-color :  rgb(255, 192, 203);
+				box-sizing:border-box;
 			}
 			header {
-				max-height: 10em;
+				
 				padding: 1%;
 			}
-			h1 {
+			#hading {
 				margin: 2%;
+				font-size: 300%;
+				font-weight:900;
+				text-transform:uppercase;
+				background-image: url("./newspaperBackground.jpg");
+				background-repeat:no-repeat;
+				background-clip:text;
+				-webkit-text-fill-color: transparent;
+				background-color:white;
 			}
 			#action-btn button {
 				padding: 1%;
 				margin: 2%;
 			}
 			textarea {
-				padding: 0.2em;
-				width: 50em;
-				height: 50vh;
-				max-height: 500px;
+				padding: 2%;
+				width: 50%;
+				height: 40vh;
+				margin: 10px;
 				resize: none;
 				box-sizing: border-box;
+				border-radius: 10px;
 			}
 			/* grid Layout start*/
 			#contener {
 				display: grid;
 				grid-template-rows: auto auto 1fr;
 				grid-template-columns: 1fr;
-				gap: 0.2em;
+				gap: 3%;
 				grid-template-areas:
 					"head"
 					"act-btn"
@@ -75,6 +86,8 @@
 				justify-content: space-around;
 				text-align: center;
 				/* border:solid 2px red; */
+				background-color: white;
+				border-radius: 10px;
 			}
 			#setting {
 				/* display:flex; */
@@ -84,6 +97,8 @@
 				padding: 1em;
 				box-sizing: border-box;
 				width: 50%;
+				background-color : rgba(0, 0, 0, 0.3);
+				color:rgb(255, 255, 255);
 			}
 			#setting * {
 				margin: 1%;
@@ -99,9 +114,7 @@
 				justify-content: space-around;
 				align-items: center;
 			}
-			textarea {
-				border-radius: 0.5em;
-			}
+
 			@media (max-width: 1000px) {
 				header {
 					flex-direction: column;
@@ -123,7 +136,7 @@
 	<body>
 		<div id="contener">
 			<header>
-				<h1>English2Hindi Transliteration</h1>
+				<span id="hading">English 2 Hindi Transliteration</span>
 				<div id="setting">
 					<label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
 					<input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range"/><br />
