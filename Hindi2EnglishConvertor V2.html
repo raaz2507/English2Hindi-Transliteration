@@ -235,12 +235,20 @@
 			let assi = char.charCodeAt(0);
 			return (assi >= 65 && assi <= 90) || (assi >= 97 && assi <= 122);
 		}
-
+		
 		function isSpecialChar(word) {
-			const specialCharRegex = /[.,?!'\-:;\n\t"@#$%^&*()_+=\[\]{}<>\\/|]/g;
+			const specialCharRegex = /[.,?!'\-:;"@#$%^&*()_+=\[\]{}<>\\/|0-9]|\n|\t/g;
 			return word.length === 1 && specialCharRegex.test(word);
 		}
-
+		/*
+		function isAlphabet(word) {
+  			return /^[A-Za-z]+$/.test(word);
+		}
+		function isSpecialChar(word) {
+    		const specialCharRegex = /^[^A-Za-z]+$/; // सिर्फ नॉन-अल्फाबेटिकल चेक
+    		return specialCharRegex.test(word);
+		}
+			*/
 		function postProcess(outputArr) {
 			let outputStr = "";
 			outputArr.forEach((word) => {
@@ -279,13 +287,15 @@
 			return arr;
 		}
 
+
+
+
 		function tranText(wordArr) {
 			const dic = Dictionary;
 			let Lword;
 			let outputArr = [];
 			let notFoundWord = [];
 			let wordFound = false;
-
 			//Word arre ke each word ko access karega
 			wordArr.forEach((word) => {
 				wordFound = false;
@@ -294,10 +304,9 @@
 					Lword = word.toLowerCase();
 					//Dic ke sub dic ko access karega
 					for (let subDis in dic) {
-						/*
-dic ke subDic me word milega to fleg ko true set karga. 
-aur word ko translated wordArre me add kar dega.
-*/
+						//dic ke subDic me word milega to fleg ko true set karga. 
+//aur word ko translated wordArre me add kar dega.
+
 						if (dic[subDis].hasOwnProperty(Lword)) {
 							outputArr.push(dic[subDis][Lword]);
 							wordFound = true;
@@ -306,10 +315,10 @@ aur word ko translated wordArre me add kar dega.
 					}
 				}
 				// agar dic me word nahi mila to notFoundWord Aree me word ko push kar dega.
-				if (!wordFound) {
+				if (!wordFound ) {
 					outputArr.push(word);
 					notFoundWord.push(word);
-				}
+				}	
 			});
 
 			if (notFoundWord.length > 0 && saveFileSet()) {
@@ -326,7 +335,8 @@ aur word ko translated wordArre me add kar dega.
 		function saveNotFoundWord(wordList) {
 			let data = {};
 			filterEngWord(wordList).forEach((word) => {
-				data[word] = "";
+				if (word.length!==1)
+				data[word.toLowerCase()] = "";
 			});
 
 			const blob = new Blob([JSON.stringify(data, null, 2)], {
