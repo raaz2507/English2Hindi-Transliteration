@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Mode</title>
+<style>
+  html, body{
+    width:100vw;
+    height:100vh;
+  }
+  *{
+    margin:0;
+    padding:0;
+  }
+  body{
+    background: url("./img/Book_etc.svg");
+  }
+  header #setting {
+    width:30%;
+    padding:3%;
+    margin:3%;
+    background-color: rgba(0, 206, 99, 0.97);
+    border-radius: 10px;
+    margin:1% auto;
+  }
+  header #setting ul li{
+    width: 2em;
+    height:2em;
+    margin:1%;
+    border-radius:10px;
+    display:inline-block;
+  }
+  #page{
+    width:21cm;
+    min-height:29cm;
+    padding:2cm;
+    margin: 2% auto;
+    opacity: 0.9;
+    box-shadow: 1px 1px 4px 1px #00000025;
+    border-radius:10px;
+    background: rgba(255, 265, 265, 0.9);
+    font-size:1.5em;
+    text-align: justify;
+  }
+  /* flex Setting Start*/
+  header #setting {
+    display:flex;
+    flex-direction: column;
+    align-items: right;
+    justify-content: space-around;
+    text-align: center;
+    gap:2%;
+  }
+  /* flex Setting End */
+</style>
+</head>
+<body>
+  <header>
+    <div id="setting">
+      <label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
+			<input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" /><br />
+      <label for="pageColor">Page Color</label>
+        <ul id="PageColorList">
+          <li style="background-color: rgba(255, 0, 0, 0.9);"></li>
+          <li style="background-color: rgba(255, 192, 203, 0.9);"></li>
+          <li style="background-color: rgba(0, 0, 0, 0.9);"></li>
+          <li style="background-color: rgba(128, 128, 128, 0.9);"></li>
+          <li style="background-color: rgba(245, 245, 245, 0.9);"></li>
+        </ul>
+      <label for="fontColor">font Color</label>
+        <ul id="fontColorList">
+          <li style="background-color: rgba(255, 0, 0, 0.9);"></li>
+          <li style="background-color: rgba(255, 192, 203, 0.9);"></li>
+          <li style="background-color: rgba(0, 0, 0, 0.9);"></li>
+          <li style="background-color: rgba(128, 128, 128, 0.9);"></li>
+          <li style="background-color: rgba(245, 245, 245, 0.9);"></li>
+        </ul>
+    </div>
+  </header>
+  <main>
+    <p id="page"></p>
+  </main>
+  
+  <script>
+    let page=document.getElementById("page");
+    page.innerText=  localStorage.getItem("readingText"); // localStorage से text लो
+
+    const fontsizeBtn = document.getElementById("font-size-range");
+    fontsizeBtn.addEventListener("input", () => {
+      page.style.fontSize = fontsizeBtn.value + "px";
+    });
+
+    
+    
+    // const setting = document.getElementById("setting");
+    // setting.addEventListener("click", ()=>{});
+    document.getElementById("setting").addEventListener("click",(event)=> {
+      // console.log(event.target.tagName);
+    // agar click kisi LI par hua hai
+    if (event.target.tagName === "LI") {
+      const clickedColor = event.target.style.backgroundColor;
+
+      // check karo ki wo kis list ka child hai
+      const parentUlId = event.target.parentElement.id;
+
+      if (parentUlId === "PageColorList") {
+        page.style.backgroundColor = clickedColor;
+      } else if (parentUlId === "fontColorList") {
+        page.style.color = clickedColor;
+      }
+    }
+  });
+  </script>
+</body>
+</html>

@@ -27,13 +27,14 @@
 	}
 	header {
 		padding: 1%;
+		box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.5);
 	}
 	#hading {
 		margin: 2%;
 		font-size: 300%;
 		font-weight: 900;
 		text-transform: uppercase;
-		background-image: url("./newspaperBackground.jpg");
+		background-image: url("./img/newspaperBackground.jpg");
 		background-repeat: no-repeat;
 		background-clip: text;
 		-webkit-text-fill-color: transparent;
@@ -52,21 +53,41 @@
 	#setting * {
 		margin: 1%;
 	}
+	#setting #ReadingModeBtn{
+		padding:3%;
+		margin:1%;
+		background-color: rgba(61, 61, 61, 0.781);
+		color:rgb(226, 226, 226);
+		border-radius: 8px;
+
+	}
 	#display{
 		margin: 2%;
 		padding:1%;
-		width:40%;
+		width:50%;
 		/* height:80%; */
 		border-radius: 10px;
 		box-shadow: 1px 1px 4px 1px  rgba(0, 0, 0, 0.243);
-		font-size:1.2em;
+		
+		text-align:left;
+		line-height: 2em;
+	}
+	#display label{
+		display:inline-block;
+		width:80%;
 	}
 	#display input{
 		width: 3em;
 		border:none;
 		border-radius: 5px;
 		box-shadow: 1px 1px 4px 1px #00000034;
+		text-align: center;
+		padding:1%;
 	}
+	#display label input{
+		font-size:2.2em;
+	}
+	
 	#action-btn button {
 		padding: 1%;
 		margin: 2%;
@@ -179,16 +200,18 @@
 				<input type="radio" name="saveFile" id="yes" value="true" />
 				&nbsp;&nbsp;
 				<label for="no">No</label>
-				<input type="radio" name="saveFile" id="no" value="false" checked />
+				<input type="radio" name="saveFile" id="no" value="false" checked /><br>
+				<button onclick="openReadingPage()" id="ReadingModeBtn">Reading Mode</button>
 			</div>
 			<div id="display">
 				<label for="total_words">Total Words:</label>
-				<input type="text" name="total_words" id="" disabled><br>
-				<label for="">Not Found words:</label>
-				<input type="text" name="not_fornt_words" id="" disabled><br>
+				<input type="text" name="total_words" id="total_words" placeholder="0" disabled><br>
+				<label for="not_found_words">Not Found words:</label>
+				<input type="text" name="not_found_words" placeholder="0" id="not_found_words" disabled><br>
 				<label for="con_per">Converstion %:</label>
-				<input type="text" name="con_per" id="" disabled>
+				<input type="text" name="con_per" placeholder="0" id="con_per" disabled>
 			</div>
+			
 		</header>
 		<div id="action-btn">
 			<button onclick="pasteText()" id="paste">paste</button>
@@ -196,23 +219,16 @@
 			<button onclick="copyText()" id="copy">copy</button>
 		</div>
 		<div id="text-area">
-			<textarea
-				name="input"
-				id="input-text"
-				placeholder="Copy or Enter Your text here."
-			></textarea>
-			<textarea
-				name="output"
-				id="output-text"
-				placeholder="Your Output"
-			></textarea>
+			<textarea name="input" id="input-text" placeholder="Copy or Enter Your text here."></textarea>
+			<textarea name="output" id="output-text" placeholder="Your Output" readonly></textarea>
 		</div>
 		<footer><p>&copy; Dovelop by Rajaanha</p></footer>
 	</div>
 
-<script src="./Hindi2EnglishDic.js"></script>
-<script src="./EnglishWord.js"></script>
+<script src="./js/Hindi2EnglishDic.js"></script>
+<script src="./js/EnglishWord.js"></script>
 <script>
+	window.addEventListener("load", updateDisplay);
 	const inputTextBox = document.getElementById("input-text");
 	const outputTextBox = document.getElementById("output-text");
 	const fontsizeBtn = document.getElementById("font-size-range");
@@ -242,6 +258,18 @@
 				alert(`Error to paste text ${err}`);
 			});
 	}
+	
+	const total_word=document.getElementById("total_words");
+	const not_found_words=document.getElementById("not_found_words");
+	const con_per=document.getElementById("con_per");
+	let TotalWord=0;
+	let Not_Found_Words=0;
+	function updateDisplay(){
+		total_word.placeholder= TotalWord;
+		not_found_words.placeholder=Not_Found_Words;
+		let per= 100-((Not_Found_Words/TotalWord)*100);
+		con_per.placeholder= isNaN(per) ? '0' : per;
+	}
 	async function fetchJson(filename = "./Hindi2EnglishDic.json") {
 		try {
 			const response = await fetch(filename);
@@ -264,11 +292,15 @@
 	function convertText() {
 		let inputText = inputTextBox.value;
 		let WordArr = preProcess(inputText);
+		TotalWord = WordArr.length; //geting data for display
 		console.log(WordArr);
 		let outputArr = tranText(WordArr);
-		console.log(outputArr);
+		// console.log(outputArr);
 		let outputStr = postProcess(outputArr);
 		outputTextBox.value = outputStr;
+		 // text को localStorage में store करो
+		 localStorage.setItem("readingText", outputStr);
+		updateDisplay();
 	}
 
 	function isAlphabet(char) {
@@ -362,7 +394,7 @@ return specialCharRegex.test(word);
 		if (notFoundWord.length > 0 && saveFileSet()) {
 			saveNotFoundWord(notFoundWord);
 		}
-
+		Not_Found_Words= notFoundWord.length; //word length for Not Found Words  for display
 		return outputArr;
 	}
 	function filterEngWord(wordArr) {
@@ -388,6 +420,11 @@ return specialCharRegex.test(word);
 		a.click();
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
+	}
+</script>
+<script>
+	function openReadingPage() {
+    window.open("./ReadModePage.html", "_blank");
 	}
 </script>
 </body>
