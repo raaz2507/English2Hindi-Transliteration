@@ -1,0 +1,181 @@
+* {
+  padding: 0;
+  margin: 0;
+  /* box-sizing:border-box; */
+}
+html,
+body {
+  width: 100%;
+}
+#contener {
+  border: solid 2px red;
+  border-radius: 0.5em;
+  margin: auto;
+  padding: 5%;
+  box-sizing: border-box;
+  width: 98vw;
+  /* height: 95vh; */
+  background-color: rgb(255, 192, 203);
+  box-sizing: border-box;
+}
+header {
+  padding: 1%;
+  box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.5);
+}
+#hading {
+  margin: 2%;
+  font-size: 300%;
+  font-weight: 900;
+  text-transform: uppercase;
+  background-image: url("./../img/newspaperBackground.jpg");
+  background-repeat: no-repeat;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-color: white;
+}
+#setting {
+  /* border: 1px solid black; */
+  box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 1em;
+  padding: 1em;
+  box-sizing: border-box;
+  width: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: rgb(255, 255, 255);
+}
+#setting * {
+  margin: 1%;
+}
+#setting button{
+  padding:3%;
+  margin:1%;
+  background-color: rgba(61, 61, 61, 0.781);
+  color:rgb(226, 226, 226);
+  border-radius: 8px;
+
+}
+#display{
+  margin: 2%;
+  padding:1%;
+  width:50%;
+  /* height:80%; */
+  border-radius: 10px;
+  box-shadow: 1px 1px 4px 1px  rgba(0, 0, 0, 0.243);
+  
+  text-align:left;
+  line-height: 2em;
+}
+#display label{
+  display:inline-block;
+  width:80%;
+}
+#display input{
+  width: 3em;
+  border:none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 4px 1px #00000034;
+  text-align: center;
+  padding:1%;
+}
+#display label input{
+  font-size:2.2em;
+}
+
+#action-btn button {
+  padding: 1%;
+  margin: 2%;
+  border-radius: 10px;
+}
+#action-btn button:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+#action-btn #paste {
+  background-color: rgb(0, 251, 255);
+}
+#action-btn #convert {
+  background-color: rgb(171, 255, 45);
+}
+#action-btn #copy {
+  background-color: rgb(237, 128, 237);
+}
+textarea {
+  padding: 2%;
+  width: 50%;
+  height: 40vh;
+  margin: 10px;
+  resize: none;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+/* grid Layout start*/
+#contener {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  grid-template-columns: 1fr;
+  gap: 3%;
+  grid-template-areas:
+    "head"
+    "act-btn"
+    "text-area";
+}
+header {
+  grid-area: head;
+  /* border:solid 2px red; */
+}
+#action-btn {
+  grid-area: act-btn;
+  /* border:solid 2px red; */
+}
+#text-area {
+  grid-area: text-area;
+  /* border:solid 2px red; */
+}
+/* grid layout end */
+/* flexbox layout */
+
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+  /* border:solid 2px red; */
+  background-color: white;
+  border-radius: 10px;
+}
+#setting {
+  /* display:flex; */
+  /* flex-direction:column; */
+}
+
+#action-btn {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+#text-area {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+footer p {
+  text-align: right;
+}
+@media (max-width: 1000px) {
+  header {
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  #text-area {
+    flex-direction: column; /* Flexbox को कॉलम ओरिएंटेशन में बदलें */
+  }
+
+  textarea {
+    width: 95%; /* दोनों टेक्स्टएरिया की चौड़ाई 90% करें */
+    min-height: 10em; /* ऊंचाई 45% तक सीमित करें */
+    margin: 1em;
+  }
+}
+/* flex-box leayout end */
