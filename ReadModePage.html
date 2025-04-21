@@ -12,6 +12,7 @@
   *{
     margin:0;
     padding:0;
+    box-sizing: border-box;
   }
   body{
     background: url("./img/Book_etc.svg");
@@ -32,14 +33,14 @@
     display:inline-block;
   }
   #page{
-    width:21cm;
-    min-height:29cm;
-    padding:2cm;
+    width:90%;
+    min-height:80%;
+    padding:1em;
     margin: 2% auto;
     opacity: 0.9;
     box-shadow: 1px 1px 4px 1px #00000025;
     border-radius:10px;
-    background: rgba(255, 265, 265, 0.9);
+    background: rgba(255, 255, 255, 0.9);
     font-size:1.5em;
     text-align: justify;
   }
@@ -53,6 +54,11 @@
     gap:2%;
   }
   /* flex Setting End */
+  @media screen and (max-width: 420px){
+    header #setting{
+      width:90%;
+    }
+  }
 </style>
 </head>
 <body>
@@ -85,7 +91,7 @@
   <script>
     let page=document.getElementById("page");
     page.innerText=  localStorage.getItem("readingText"); // localStorage से text लो
-
+    localStorage.setItem("readingText", " ");
     const fontsizeBtn = document.getElementById("font-size-range");
     fontsizeBtn.addEventListener("input", () => {
       page.style.fontSize = fontsizeBtn.value + "px";
