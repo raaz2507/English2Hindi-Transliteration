@@ -1,4 +1,4 @@
-﻿const Dictionary={
+﻿export const Dictionary={
   "naam": {
     "aamir": "आमिर",
     "adeel": "आदील",

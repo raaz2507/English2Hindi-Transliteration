@@ -1,3 +1,9 @@
+import {Dictionary} from './Hindi2EnglishDic.js';
+import {EngWord} from './EnglishWord.js';
+console.log("hope");
+document.addEventListener("DOMContentLoaded", ()=>{
+
+});
 window.addEventListener("load", updateDisplay);
 	const inputTextBox = document.getElementById("input-text");
 	const outputTextBox = document.getElementById("output-text");
@@ -54,16 +60,13 @@ window.addEventListener("load", updateDisplay);
 		}
 	}
 	function saveFileSet() {
-		let shouldSave = document.querySelector(
-			'input[name="saveFile"]:checked'
-		).value;
+		let shouldSave = document.querySelector('input[name="saveJSON"]:checked').value;
 		return shouldSave === "true" ? true : false;
 	}
 	function convertText() {
 		let inputText = inputTextBox.value;
 		let WordArr = preProcess(inputText);
 		TotalWord = WordArr.length; //geting data for display
-		console.log(WordArr);
 		let outputArr = tranText(WordArr);
 		// console.log(outputArr);
 		let outputStr = postProcess(outputArr);
@@ -208,10 +211,17 @@ return specialCharRegex.test(word);
 			const link = document.createElement("a");
 
 			link.href = URL.createObjectURL(blob);
-			link.download = "myfile.txt"; // तुम यहाँ अपनी file का नाम रख सकते हो
+			link.download = fileName; // तुम यहाँ अपनी file का नाम रख सकते हो
 
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
 		}
 	}
+
+	// exporting funciton 
+	window.pasteText = pasteText;
+	window.convertText= convertText;
+	window.copyText=copyText;
+	window.openReadingPage=openReadingPage;
+	window.saveTxt=saveTxt;
