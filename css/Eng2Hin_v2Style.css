@@ -24,7 +24,7 @@ header {
 }
 #hading {
   margin: 2%;
-  font-size: 300%;
+  font-size: 2.7em;
   font-weight: 900;
   text-transform: uppercase;
   background-image: url("./../img/newspaperBackground.jpg");
@@ -167,6 +167,12 @@ footer p {
   header {
     flex-direction: column;
     justify-content: space-around;
+  }
+  #hading{
+    font-size: 2em;
+  }
+  #setting, #display{
+    width :90%;
   }
   #text-area {
     flex-direction: column; /* Flexbox को कॉलम ओरिएंटेशन में बदलें */
