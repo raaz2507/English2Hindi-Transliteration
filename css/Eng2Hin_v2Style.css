@@ -52,7 +52,7 @@ header {
   background-color: rgba(61, 61, 61, 0.781);
   color:rgb(226, 226, 226);
   border-radius: 8px;
-
+  text-transform: capitalize;
 }
 #display{
   margin: 2%;

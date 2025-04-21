@@ -100,7 +100,6 @@ return specialCharRegex.test(word);
 		outputArr.forEach((word) => {
 			if (isSpecialChar(word)) {
 				outputStr += word; // स्पेशल कैरेक्टर को सीधे जोड़ो
-				wasSpl = true;
 			} else {
 				outputStr += word + " "; // स्पेशल कैरेक्टर के बाद स्पेस मत दो
 			}
