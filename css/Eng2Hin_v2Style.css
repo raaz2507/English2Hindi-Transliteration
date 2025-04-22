@@ -1,11 +1,17 @@
+@font-face{
+  font-family: myFont;
+  src: url('./../font/ComicReal-LVGZn.otf');
+}
 * {
   padding: 0;
   margin: 0;
   /* box-sizing:border-box; */
 }
-html,
-body {
+html,body {
   width: 100%;
+}
+*{
+  font-family: myFont;
 }
 #contener {
   border: solid 2px red;
@@ -52,7 +58,6 @@ header {
   background-color: rgba(61, 61, 61, 0.781);
   color:rgb(226, 226, 226);
   border-radius: 8px;
-  text-transform: capitalize;
 }
 #display{
   margin: 2%;
@@ -85,6 +90,7 @@ header {
   padding: 1%;
   margin: 2%;
   border-radius: 10px;
+  text-transform:uppercase;
 }
 #action-btn button:hover {
   transform: scale(1.1);

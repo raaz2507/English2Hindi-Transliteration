@@ -11,16 +11,25 @@
 		<header>
 			<span id="hading">English 2 Hindi Transliteration</span>
 			<div id="setting">
-				<label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
-				<input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" /><br />
-				<label for="file">Do u want save non-find words in json file ?</label><br />
-				<label for="yes">Yes</label>
-				<input type="radio" name="saveJSON" id="yes" value="true" />
-				&nbsp;&nbsp;
-				<label for="no">No</label>
-				<input type="radio" name="saveJSON" id="no" value="false" checked /><br>
-				<button onclick="openReadingPage()" id="ReadingModeBtn">Reading Mode</button>
-				<button id="saveTxt" onclick="saveTxt()">save as txt Files</button>
+				<div>
+					<label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
+					<input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" />
+					<br />
+				</div>
+				<div>
+					<label for="file">Do u want save non-find words in json file ?</label>
+					<br />
+					<label for="yes">Yes</label>
+					<input type="radio" name="saveJSON" id="yes" value="true" />
+					&nbsp;&nbsp;
+					<label for="no">No</label>
+					<input type="radio" name="saveJSON" id="no" value="false" checked /><br>
+				</div>
+				<div>
+					<button id="ReadingModeBtn">Reading Mode</button>
+					<button id="saveTxt">save as txt Files</button>
+				</div>
+				
 			</div>
 			<div id="display">
 				<label for="total_words">Total Words:</label>
@@ -33,19 +42,18 @@
 			
 		</header>
 		<div id="action-btn">
-			<button onclick="pasteText()" id="paste">paste</button>
-			<button onclick="convertText()" id="convert">convert</button>
-			<button onclick="copyText()" id="copy">copy</button>
+			<!-- <button onclick="pasteText()" id="pasteBtn">paste</button> -->
+			<button id="pasteBtn">paste</button>
+			<button id="convertBtn">convert</button>
+			<button id="copyBtn">copy</button>
 		</div>
 		<div id="text-area">
-			<textarea name="input" id="input-text" placeholder="Copy or Enter Your text here."></textarea>
+			<textarea name="input" id="input-text" placeholder="Enter or Copy/Paste Your text here."></textarea>
 			<textarea name="output" id="output-text" placeholder="Your Output" readonly></textarea>
 		</div>
 		<footer><p>&copy; Dovelop by Rajaanha</p></footer>
 	</div>
 
-<!-- <script src="./js/Hindi2EnglishDic.js"></script>
-<script src="./js/EnglishWord.js"></script> -->
-<script type="module" src="./js/Eng2Hin_Con_v2.js" defer></script>
+<script type="module" src="./js/Eng2Hin_Con_v2byCalss.js" defer></script>
 </body>
 </html>

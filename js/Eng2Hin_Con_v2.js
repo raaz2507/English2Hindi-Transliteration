@@ -1,6 +1,6 @@
 import {Dictionary} from './Hindi2EnglishDic.js';
 import {EngWord} from './EnglishWord.js';
-console.log("hope");
+
 document.addEventListener("DOMContentLoaded", ()=>{
 
 });
