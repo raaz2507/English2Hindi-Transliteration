@@ -3,92 +3,92 @@ import { EngWord } from "./EnglishWord.js";
 
 
 document.addEventListener('DOMContentLoaded', ()=>{
-  
-  const allElements= new UIElements();
-  const tran_Dash=new TranslationDashboard(allElements);
-  const tran_Engine= new TransliterationEngine();
+	
+	const allElements= new UIElements();
+	const tran_Dash=new TranslationDashboard(allElements);
+	const tran_Engine= new TransliterationEngine();
 
-  allElements.getVerFormDom();
-  
-  setEventsOnBtn(allElements, tran_Dash, tran_Engine);
+	allElements.getVerFormDom();
+	
+	setEventsOnBtn(allElements, tran_Dash, tran_Engine);
 });
 
 
-function  setEventsOnBtn(elmt, Dashbord, tran_Engine){
-  //action button event
-  elmt.pasteBtn.addEventListener('click',()=> Dashbord.pasteText(elmt.inputTextBox));
-  elmt.copyBtn.addEventListener('click', ()=>Dashbord.copyText(elmt.outputTextBox));
-  
-  //convert text
-  elmt.convertBtn.addEventListener('click', ()=> {
-    //this function translate and show string to output box
-    elmt.outputTextBox.value = tran_Engine.convertText(elmt.inputTextBox.value);
-    //this function update display
-    Dashbord.updateDisplay(tran_Engine.totalWordLength, tran_Engine.notFoundWordsLength);
-  });
+function	setEventsOnBtn(elmt, Dashbord, tran_Engine){
+	//action button event
+	elmt.pasteBtn.addEventListener('click',()=> Dashbord.pasteText(elmt.inputTextBox));
+	elmt.copyBtn.addEventListener('click', ()=>Dashbord.copyText(elmt.outputTextBox));
+	
+	//convert text
+	elmt.convertBtn.addEventListener('click', ()=> {
+		//this function translate and show string to output box
+		elmt.outputTextBox.value = tran_Engine.convertText(elmt.inputTextBox.value);
+		//this function update display
+		Dashbord.updateDisplay(tran_Engine.totalWordLength, tran_Engine.notFoundWordsLength);
+	});
 
-  //setting btn
-  elmt.fontSizeRange.addEventListener("input", () => Dashbord.setTextBoxFontSize(elmt.fontSizeRange, elmt.inputTextBox, elmt.outputTextBox));
-  
-  //converted Text seve ro Read Related Butoon
-  elmt.ReadingModeBtn.addEventListener('click', ()=> Dashbord.openReadingPage(elmt.outputTextBox.value));
-  elmt.saveTxt.addEventListener('click', ()=>  Dashbord.saveTxt(elmt.outputTextBox.value));
+	//setting btn
+	elmt.fontSizeRange.addEventListener("input", () => Dashbord.setTextBoxFontSize(elmt.fontSizeRange, elmt.inputTextBox, elmt.outputTextBox));
+	
+	//converted Text seve ro Read Related Butoon
+	elmt.ReadingModeBtn.addEventListener('click', ()=> Dashbord.openReadingPage(elmt.outputTextBox.value));
+	elmt.saveTxt.addEventListener('click', ()=>	Dashbord.saveTxt(elmt.outputTextBox.value));
 }
 
 class TransliterationEngine{
-  
-  constructor(){
-    this.notFoundWordsLength=0;
-    this.totalWordLength=0;
-  }
-  convertText(inputText) {
+	
+	constructor(){
+		this.notFoundWordsLength=0;
+		this.totalWordLength=0;
+	}
+	convertText(inputText) {
 		let WordArr=this.#StringToArre(inputText);
-    console.log(WordArr);
+		console.log(WordArr);
 		this.totalWordLength = WordArr.length; //geting data for display
 		let outputArr = this.#tranText(WordArr);
 		console.log(outputArr);
 		let outputStr = this.#Arry2StringForOutput(outputArr);
-    console.log(outputStr);
-    return outputStr;
+		console.log(outputStr);
+		return outputStr;
 		// outputTextBox.value = outputStr;
-		//  // text को localStorage में store करो
-		//  localStorage.setItem("readingText", outputStr);
+		//	// text को localStorage में store करो
+		//	localStorage.setItem("readingText", outputStr);
 		// updateDisplay();
 	}
 
-  #StringToArre(inputText){
-    let arr = [];
-    let word = "";
-    
-    for (let char of inputText) {
-      if (isAlphabet(char)) {
-        word += char;
-      } else {
-        //jab non alfabate value milegi tab ek complite single word maan lega
-        if (word !== "") {
-          arr.push(word); //arre me word daal dega
-          word = ""; //word ver ko empty kar dega
-        }
-        //agar space milega tab ek complete single word maan lega
-        if (char !== " ") {
-          arr.push(char);
-        }
-      }
-    }
+	#StringToArre(inputText){
+		let arr = [];
+		let word = "";
+		
+		for (let char of inputText) {
+			if (isAlphabet(char)) {
+				word += char;
+			} else {
+				//jab non alfabate value milegi tab ek complite single word maan lega
+				if (word !== "") {
+					arr.push(word); //arre me word daal dega
+					word = ""; //word ver ko empty kar dega
+				}
+				//agar space milega tab ek complete single word maan lega
+				if (char !== " ") {
+					arr.push(char);
+				}
+			}
+		}
 
-    if (word !== "") {
-      arr.push(word);
-    }
-    return arr;
+		if (word !== "") {
+			arr.push(word);
+		}
+		return arr;
 
-    function isAlphabet(char) {
-      let desimalValu = char.charCodeAt(0);
-      //devnagri(hindi) 2305-2416
-      return (desimalValu >= 65 && desimalValu <= 90) || (desimalValu >= 97 && desimalValu <= 122);
-    }
-  }
-    
-  #tranText(wordArr) {
+		function isAlphabet(char) {
+			let desimalValu = char.charCodeAt(0);
+			//devnagri(hindi) 2305-2416
+			return (desimalValu >= 65 && desimalValu <= 90) || (desimalValu >= 97 && desimalValu <= 122);
+		}
+	}
+		
+	#tranText(wordArr) {
 		const dic = Dictionary;
 		let Lword;
 		let outputArr = [];
@@ -122,47 +122,47 @@ class TransliterationEngine{
 		if (notFoundWord.length > 0 && saveFileSet()) {
 			saveNotFoundWord(notFoundWord);
 		}
-		this.notFoundWordsLength = notFoundWord.length; //word length for Not Found Words  for display
+		this.notFoundWordsLength = notFoundWord.length; //word length for Not Found Words	for display
 		return outputArr;
 
-    /* block function Define */
-    function saveFileSet() {
-      let shouldSave = document.querySelector('input[name="saveJSON"]:checked').value;
-      return shouldSave === "true" ? true : false;
-    }
+		/* block function Define */
+		function saveFileSet() {
+			let shouldSave = document.querySelector('input[name="saveJSON"]:checked').value;
+			return shouldSave === "true" ? true : false;
+		}
 
-    function saveNotFoundWord(wordList) {
-      let data = {};
-      filterEngWord(wordList).forEach((word) => {
-        if (word.length !== 1) data[word.toLowerCase()] = "";
-      });
-  
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
-        type: "application/json",
-      });
-      const url = URL.createObjectURL(blob);
-  
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "notFoundWords.json"; // Download file का नाम
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-    function filterEngWord(wordArr) {
-      const engWord = EngWord; //fetchJson('EnglishWord.json');
-      const filterdList = wordArr.filter((word) => !engWord.includes(word));
-      return filterdList;
-    }
-  }
-  
-  #isSpecialChar(word) {
-    const specialCharRegex =
-      /[.,?!'\-:;"@#$%^&*()_+=\[\]{}<>\\/|0-9]|\n|\t/g;
-    return word.length === 1 && specialCharRegex.test(word);
-  }
-  #Arry2StringForOutput(outputArr) {
+		function saveNotFoundWord(wordList) {
+			let data = {};
+			filterEngWord(wordList).forEach((word) => {
+				if (word.length !== 1) data[word.toLowerCase()] = "";
+			});
+	
+			const blob = new Blob([JSON.stringify(data, null, 2)], {
+				type: "application/json",
+			});
+			const url = URL.createObjectURL(blob);
+	
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "notFoundWords.json"; // Download file का नाम
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			URL.revokeObjectURL(url);
+		}
+		function filterEngWord(wordArr) {
+			const engWord = EngWord; //fetchJson('EnglishWord.json');
+			const filterdList = wordArr.filter((word) => !engWord.includes(word));
+			return filterdList;
+		}
+	}
+	
+	#isSpecialChar(word) {
+		const specialCharRegex =
+			/[.,?!'\-:;"@#$%^&*()_+=\[\]{}<>\\/|0-9]|\n|\t/g;
+		return word.length === 1 && specialCharRegex.test(word);
+	}
+	#Arry2StringForOutput(outputArr) {
 		let outputStr = "";
 		outputArr.forEach((word) => {
 			if (this.#isSpecialChar(word)) {
@@ -177,62 +177,62 @@ class TransliterationEngine{
 }
 
 class UIElements{
-  
-  getVerFormDom(){
-    //setting btn
-    this.fontSizeRange= document.getElementById('font-size-range');
-    this.saveJSON= document.querySelector('input[name="saveJSON"]:checked');
+	
+	getVerFormDom(){
+		//setting btn
+		this.fontSizeRange= document.getElementById('font-size-range');
+		this.saveJSON= document.querySelector('input[name="saveJSON"]:checked');
 
-    //Display status elements
-    this.totalWordDis=document.getElementById("total_words");
-    this.notFoundWordsDis=document.getElementById("not_found_words");
-    this.conversionPercentageDis=document.getElementById("con_per");
+		//Display status elements
+		this.totalWordDis=document.getElementById("total_words");
+		this.notFoundWordsDis=document.getElementById("not_found_words");
+		this.conversionPercentageDis=document.getElementById("con_per");
 
-    //action btn
-    this.pasteBtn= document.getElementById('pasteBtn');
-    this.convertBtn= document.getElementById('convertBtn');
-    this.copyBtn= document.getElementById('copyBtn');
+		//action btn
+		this.pasteBtn= document.getElementById('pasteBtn');
+		this.convertBtn= document.getElementById('convertBtn');
+		this.copyBtn= document.getElementById('copyBtn');
 
-    //converted Text save or read related button
-    this.ReadingModeBtn= document.getElementById('ReadingModeBtn');
-    this.saveTxt=document.getElementById('saveTxt');
+		//converted Text save or read related button
+		this.ReadingModeBtn= document.getElementById('ReadingModeBtn');
+		this.saveTxt=document.getElementById('saveTxt');
 
-    //text box
-    this.inputTextBox = document.getElementById('input-text');
-    this.outputTextBox = document.getElementById('output-text');
-  }
+		//text box
+		this.inputTextBox = document.getElementById('input-text');
+		this.outputTextBox = document.getElementById('output-text');
+	}
 }
 
 class TranslationDashboard{
-  #elmt;
-  constructor(elmt){
-    this.#elmt=elmt;
-  }
-  updateDisplay(totalWords, notFoundWords){
-    this.#elmt.totalWordDis.placeholder = totalWords;
-    this.#elmt.notFoundWordsDis.placeholder= notFoundWords;
-    this.#elmt.conversionPercentageDis.placeholder= 100-((notFoundWords/totalWords)*100).toFixed(2);
-  }
+	#elmt;
+	constructor(elmt){
+		this.#elmt=elmt;
+	}
+	updateDisplay(totalWords, notFoundWords){
+		this.#elmt.totalWordDis.placeholder = totalWords;
+		this.#elmt.notFoundWordsDis.placeholder= notFoundWords;
+		this.#elmt.conversionPercentageDis.placeholder= 100-((notFoundWords/totalWords)*100).toFixed(2);
+	}
 
-  setTextBoxFontSize(fontSizeRanger=this.#elmt.fontSizeRange, inputTextBox=this.#elmt.inputTextBox, outputTextBox=this.#elmt.outputTextBox){
-    inputTextBox.style.fontSize = fontSizeRanger.value + "px";
-    outputTextBox.style.fontSize = fontSizeRanger.value + "px";
-  }
+	setTextBoxFontSize(fontSizeRanger=this.#elmt.fontSizeRange, inputTextBox=this.#elmt.inputTextBox, outputTextBox=this.#elmt.outputTextBox){
+		inputTextBox.style.fontSize = fontSizeRanger.value + "px";
+		outputTextBox.style.fontSize = fontSizeRanger.value + "px";
+	}
 
-  //copy and paset methods
+	//copy and paset methods
 	pasteText(inputTextBox=this.#elmt.inputTextBox) {
 		navigator.clipboard
 			.readText()
 			.then((text) => {
 				inputTextBox.value = text;
-        console.log("paste Text Sussefuly...");
+				console.log("paste Text Sussefuly...");
 			})
 			.catch((err) => {
 				alert(`Error to paste text ${err}`);
 			});
 	}
 
-  copyText(outputTextBox=this.#elmt.outputTextBox) {
+	copyText(outputTextBox=this.#elmt.outputTextBox) {
 		navigator.clipboard
 			.writeText(outputTextBox.value)
 			.then(() => {
@@ -244,18 +244,18 @@ class TranslationDashboard{
 			});
 	}
 
-  openReadingPage(text=this.#elmt.outputTextBox.value) {
-    localStorage.setItem("readingText", text);
-    window.open("./ReadModePage.html", "_blank");
+	openReadingPage(text=this.#elmt.outputTextBox.value) {
+		localStorage.setItem("readingText", text);
+		window.open("./ReadModePage.html", "_blank");
 	}
 
-  saveTxt(text =this.#elmt.outputTextBox){
+	saveTxt(text =this.#elmt.outputTextBox){
 		let fileName = prompt("Enter file name:", "myfile");
 
 		// 🔸 Agar user ne cancel nahi kiya
 		if (fileName) {
 			if (!fileName.endsWith(".txt")) {
-				fileName += ".txt";  // default extension .txt
+				fileName += ".txt";	// default extension .txt
 			}
 			const blob = new Blob([text], { type: "text/plain" });
 			const link = document.createElement("a");
@@ -267,5 +267,5 @@ class TranslationDashboard{
 			link.click();
 			document.body.removeChild(link);
 		}
-  }
+	}
 }

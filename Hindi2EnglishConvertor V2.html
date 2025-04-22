@@ -9,7 +9,7 @@
 <body>
 	<div id="contener">
 		<header>
-			<span id="hading">English 2 Hindi Transliteration</span>
+			<div id="heading">English 2 Hindi Transliteration</div>
 			<div id="setting">
 				<div>
 					<label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
@@ -32,25 +32,34 @@
 				
 			</div>
 			<div id="display">
-				<label for="total_words">Total Words:</label>
-				<input type="text" name="total_words" id="total_words" placeholder="0" disabled><br>
-				<label for="not_found_words">Not Found words:</label>
-				<input type="text" name="not_found_words" placeholder="0" id="not_found_words" disabled><br>
-				<label for="con_per">Converstion %:</label>
-				<input type="text" name="con_per" placeholder="0" id="con_per" disabled>
+				<div>
+					<label for="total_words">Total Words:</label>
+					<input type="text" name="total_words" id="total_words" placeholder="0" disabled><br>
+				</div>
+				<div>
+					<label for="not_found_words">Not Found words:</label>
+					<input type="text" name="not_found_words" placeholder="0" id="not_found_words" disabled><br>
+				</div>
+				<div>
+					<label for="con_per">Converstion %:</label>
+					<input type="text" name="con_per" placeholder="0" id="con_per" disabled>
+				</div>
 			</div>
 			
 		</header>
-		<div id="action-btn">
-			<!-- <button onclick="pasteText()" id="pasteBtn">paste</button> -->
-			<button id="pasteBtn">paste</button>
-			<button id="convertBtn">convert</button>
-			<button id="copyBtn">copy</button>
-		</div>
-		<div id="text-area">
-			<textarea name="input" id="input-text" placeholder="Enter or Copy/Paste Your text here."></textarea>
-			<textarea name="output" id="output-text" placeholder="Your Output" readonly></textarea>
-		</div>
+		<main>
+			<div id="action-btn">
+				<!-- <button onclick="pasteText()" id="pasteBtn">paste</button> -->
+				<button id="pasteBtn">paste</button>
+				<button id="convertBtn">convert</button>
+				<button id="copyBtn">copy</button>
+			</div>
+			<div id="text-area">
+				<textarea name="input" id="input-text" placeholder="Enter or Copy/Paste Your text here."></textarea>
+				<textarea name="output" id="output-text" placeholder="Your Output" readonly></textarea>
+			</div>
+		</main>
+		
 		<footer><p>&copy; Dovelop by Rajaanha</p></footer>
 	</div>
 

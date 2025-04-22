@@ -166,7 +166,7 @@ return specialCharRegex.test(word);
 		if (notFoundWord.length > 0 && saveFileSet()) {
 			saveNotFoundWord(notFoundWord);
 		}
-		Not_Found_Words= notFoundWord.length; //word length for Not Found Words  for display
+		Not_Found_Words= notFoundWord.length; //word length for Not Found Words	for display
 		return outputArr;
 	}
 	function filterEngWord(wordArr) {
@@ -193,8 +193,8 @@ return specialCharRegex.test(word);
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
 	}
-  function openReadingPage() {
-    window.open("./ReadModePage.html", "_blank");
+	function openReadingPage() {
+		window.open("./ReadModePage.html", "_blank");
 	}
 	function saveTxt(){
 		let fileName = prompt("Enter file name:", "myfile");
@@ -202,7 +202,7 @@ return specialCharRegex.test(word);
 		// 🔸 Agar user ne cancel nahi kiya
 		if (fileName) {
 			if (!fileName.endsWith(".txt")) {
-				fileName += ".txt";  // default extension .txt
+				fileName += ".txt";	// default extension .txt
 			}
 		
 			const text = localStorage.getItem("readingText");//"Hello meri jaan 💖, yeh file download ho rahi hai!";
