@@ -4,48 +4,49 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>English2Hindi V2</title>
-<link rel="stylesheet" href="./css/Eng2Hin_v2Style.css">
+		<link rel="stylesheet" href="./css/Eng2Hin_v2Style.css">
 </head>
 <body>
 	<div id="contener">
 		<header>
-			<div id="heading">English 2 Hindi Transliteration</div>
-			<div id="setting">
-				<div>
-					<label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
-					<input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" />
-					<br />
-				</div>
-				<div>
-					<label for="file">Do u want save non-find words in json file ?</label>
-					<br />
-					<label for="yes">Yes</label>
-					<input type="radio" name="saveJSON" id="yes" value="true" />
-					&nbsp;&nbsp;
-					<label for="no">No</label>
-					<input type="radio" name="saveJSON" id="no" value="false" checked /><br>
-				</div>
-				<div>
-					<button id="ReadingModeBtn">Reading Mode</button>
-					<button id="saveTxt">save as txt Files</button>
-				</div>
-				
+			<div id="heading">
+				<p>English 2 Hindi Transliteration</p>
 			</div>
-			<div id="display">
-				<div>
-					<label for="total_words">Total Words:</label>
-					<input type="text" name="total_words" id="total_words" placeholder="0" disabled><br>
+				<div id="setting">
+					<div>
+						<label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
+						<input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" />
+						<br />
+					</div>
+					<div>
+						<label for="file">Do u want save non-find words in json file ?</label>
+						<br />
+						<label for="yes">Yes</label>
+						<input type="radio" name="saveJSON" id="yes" value="true" />
+							&nbsp;&nbsp;
+						<label for="no">No</label>
+						<input type="radio" name="saveJSON" id="no" value="false" checked /><br>
+					</div>
+					<div>
+						<button id="ReadingModeBtn">Reading Mode</button>
+						<button id="saveTxt">save as txt Files</button>
+					</div>
+					
 				</div>
-				<div>
-					<label for="not_found_words">Not Found words:</label>
-					<input type="text" name="not_found_words" placeholder="0" id="not_found_words" disabled><br>
-				</div>
-				<div>
-					<label for="con_per">Converstion %:</label>
-					<input type="text" name="con_per" placeholder="0" id="con_per" disabled>
-				</div>
+				<div id="display">
+					<div>
+						<label for="total_words">Total Words:</label>
+						<input type="text" name="total_words" id="total_words" placeholder="0" disabled><br>
+					</div>
+					<div>
+						<label for="not_found_words">Not Found words:</label>
+						<input type="text" name="not_found_words" placeholder="0" id="not_found_words" disabled><br>
+					</div>
+					<div>
+						<label for="con_per">Converstion %:</label>
+						<input type="text" name="con_per" placeholder="0" id="con_per" disabled>
+					</div>
 			</div>
-			
 		</header>
 		<main>
 			<div id="action-btn">
