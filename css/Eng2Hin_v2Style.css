@@ -87,8 +87,10 @@ header #display label{
   width:60%;
 }
 header #display input[type="text"]{
+  font-size: 1.3em;
   width:30%;
   text-align: center;
+  margin:2% auto;
 }
 
 main{
@@ -187,10 +189,7 @@ main #text-area{
 }
 
 /* flex setting end */
-/* grid Layout start */
 
-
-/* Grid Layout End */
 @media only screen and (max-width: 1000px){
   header{
     flex-direction: column;
@@ -202,6 +201,10 @@ main #text-area{
   header #heading, #setting, #display{
     width:90%;
     margin:1%;
+  }
+  main #action-btn button{
+    font-size: 1.6em;
+    padding:1% 4%;
   }
   main #text-area{
     flex-direction: column;

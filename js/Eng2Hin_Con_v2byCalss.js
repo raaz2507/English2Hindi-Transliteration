@@ -3,13 +3,16 @@ import { EngWord } from "./EnglishWord.js";
 
 
 document.addEventListener('DOMContentLoaded', ()=>{
-	
+
+	 //ye web page se saare element ko capture kar leta hai
 	const allElements= new UIElements();
+	
+	//ye dom ko deshbord ki karha funchelty provide karata hai 
 	const tran_Dash=new TranslationDashboard(allElements);
+
+	//ye main-core hai janha text translate hota hai
 	const tran_Engine= new TransliterationEngine();
 
-	allElements.getVerFormDom();
-	
 	setEventsOnBtn(allElements, tran_Dash, tran_Engine);
 });
 
@@ -28,7 +31,7 @@ function	setEventsOnBtn(elmt, Dashbord, tran_Engine){
 	});
 
 	//setting btn
-	elmt.fontSizeRange.addEventListener("input", () => Dashbord.setTextBoxFontSize(elmt.fontSizeRange, elmt.inputTextBox, elmt.outputTextBox));
+	elmt.fontSizeRange.addEventListener("input", ()=> Dashbord.setTextBoxFontSize(elmt.fontSizeRange, elmt.inputTextBox, elmt.outputTextBox));
 	
 	//converted Text seve ro Read Related Butoon
 	elmt.ReadingModeBtn.addEventListener('click', ()=> Dashbord.openReadingPage(elmt.outputTextBox.value));
@@ -119,7 +122,7 @@ class TransliterationEngine{
 			}
 		});
 
-		if (notFoundWord.length > 0 && saveFileSet()) {
+		if (notFoundWord.length > 0 && (saveFileSet() || saveFileSetWithCount())) {
 			saveNotFoundWord(notFoundWord);
 		}
 		this.notFoundWordsLength = notFoundWord.length; //word length for Not Found Words	for display
@@ -130,8 +133,44 @@ class TransliterationEngine{
 			let shouldSave = document.querySelector('input[name="saveJSON"]:checked').value;
 			return shouldSave === "true" ? true : false;
 		}
-
+		function saveFileSetWithCount() {
+			let value = document.querySelector('input[name="saveJSON"]:checked').value;
+			return value === "true";
+		}
 		function saveNotFoundWord(wordList) {
+			let data = {};
+			let filteredWords = filterEngWord(wordList).map(word => word.toLowerCase());
+			const saveWithCount = saveFileSetWithCount();
+			if (saveWithCount) {
+				// Count frequency
+				filteredWords.forEach(word => {
+					if (word.length > 1) {
+						data[word] = (data[word] || 0) + 1;
+					}
+				});
+			} else {
+				// Simple empty JSON keys
+				filteredWords.forEach(word => {
+					if (word.length > 1) {
+						data[word] = "";
+					}
+				});
+			}
+		
+			const blob = new Blob([JSON.stringify(data, null, 2)], {
+				type: "application/json",
+			});
+			const url = URL.createObjectURL(blob);
+		
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = saveWithCount ? "notFoundWords_withCount.json" : "notFoundWords.json";
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			URL.revokeObjectURL(url);
+		}
+		function saveNotFoundWordOld(wordList) {
 			let data = {};
 			filterEngWord(wordList).forEach((word) => {
 				if (word.length !== 1) data[word.toLowerCase()] = "";
@@ -174,10 +213,26 @@ class TransliterationEngine{
 
 		return outputStr.trim(); // आखिरी में एक्स्ट्रा स्पेस हटा दो
 	}
+	async fetchJson(filename = "./Hindi2EnglishDic.json") {
+		try {
+			const response = await fetch(filename);
+			if (!response.ok) {
+				throw new Error("Network Response was not ok..");
+			}
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			console.error(`There was a problem reading JSON Data ${error}`);
+			return null;
+		}
+	}
 }
 
 class UIElements{
-	
+	constructor(){
+		this.getVerFormDom();
+	}
+
 	getVerFormDom(){
 		//setting btn
 		this.fontSizeRange= document.getElementById('font-size-range');
