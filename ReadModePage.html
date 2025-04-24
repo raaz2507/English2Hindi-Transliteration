@@ -4,197 +4,98 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reading Mode</title>
-<style>
-  html, body{
-    width:100vw;
-    height:100vh;
-  }
-  *{
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-    /* border: 2px solid red; */
-  }
-  body{
-    background: url("./img/Book_etc.svg");
-  }
-  header #setting {
-    /* width:100%; */
-    background-color: rgba(0, 206, 99, 0.7);
-    border-radius: 10px;
-  }
-  header #setting div{
-    width:100%;
-    padding:2%;
-  }
-  header #setting ul li{
-    width: 2em;
-    height:2em;
-    margin:1%;
-    border-radius:10px;
-    display:inline-block;
-  }
-  nav{
-    background-color: rgba(137, 43, 226, .8);
-    border-radius: 50%;
-    width:5em;
-    height:5em;
-    padding:7%;
-    opacity: 0.7;
-    /* box-shadow: 1px 1px 4px 2px rgba(137, 43, 226, 0.7); */
-  }
-  nav:hover{
-    opacity:1;
-  }
-  nav .actionBtnIcon{
-    fill: white;
-    width: 3em;
-  }
-  #page{
-    width:90%;
-    min-height:80%;
-    padding:1em;
-    margin: 2% auto;
-    opacity: 0.9;
-    box-shadow: 1px 1px 4px 1px #00000025;
-    border-radius:10px;
-    background: rgba(255, 255, 255, 0.9);
-    font-size:1.5em;
-    text-align: justify;
-  }
-  /* flex Setting Start*/
-  nav{
-    display:flex;
-    align-items: center;
-    justify-content: center;
-  }
-  header #setting {
-    display:flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    text-align: center;
-    gap:2%;
-  }
-  header #setting ul{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-  }
-  /* flex Setting End */
-  /* drop-up setting start */
-  .wapper{
-    position: fixed;
-    bottom: 10vh;
-    right: 10vh;
-  }
-  .drop-menu{
-    position:absolute;
-    transition: display .5s ease;
-    bottom:0;
-    right:200%;
-    /* bottom:100%; */
-    /* left:100%; */
-    /* right:100%; */
-  }
-  .hide{
-    display:none;
-  }
-  .show{
-    display:block;
-  }
-  .action-btn{
-
-  }
-  /* drop-up setting end */
-  @media screen and (max-width: 1000px){
-    header #setting{
-      flex-direction: column;
-    }
-  }
-</style>
+  <link rel="stylesheet" href="./css/ReadModePageStyle.css">
 </head>
 <body>
-  <header class="wapper">
-    <div class="drop-menu hide">
-      <div id="setting" >
-        <div>
-          <label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
-          <input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" /><br />
-        </div>
-        <div>
-          <label for="pageColor">Page Color</label>
-          <ul id="PageColorList">
-            <li style="background-color: rgba(255, 0, 0, 0.9);"></li>
-            <li style="background-color: rgba(255, 192, 203, 0.9);"></li>
-            <li style="background-color: rgba(0, 0, 0, 0.9);"></li>
-            <li style="background-color: rgba(128, 128, 128, 0.9);"></li>
-            <li style="background-color: rgba(245, 245, 245, 0.9);"></li>
+  <div class="wapper">
+    
+    <div class="menu" id="menu">
+      <div>
+        <label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
+        <input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" /><br />
+      </div>
+      <div class="page-color">
+        <p class="heading">Page Color</p>
+        <ul id="PageColorList">
+          <li> <div style="background-color: rgba(255, 000, 000, 0.9);"></div></li>
+          <li> <div style="background-color: rgba(255, 192, 203, 0.9);"></div></li>
+          <li> <div style="background-color: rgba(000, 000, 000, 0.9);"></div></li>
+          <li> <div style="background-color: rgba(128, 128, 128, 0.9);"></div></li>
+          <li> <div style="background-color: rgba(245, 245, 245, 0.9);"></div></li>
+        </ul>
+      </div>
+      <div class="text-color">
+        <p class="heading">Text Color</p>
+        <ul id="fontColorList">
+            <li> <div style="background-color: rgba(255, 000, 000, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(255, 192, 203, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(000, 000, 000, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(128, 128, 128, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(245, 245, 245, 0.9);"></div></li>
           </ul>
-        </div>
-        <div>
-          <label for="fontColor">font Color</label>
-          <ul id="fontColorList">
-            <li style="background-color: rgba(255, 0, 0, 0.9);"></li>
-            <li style="background-color: rgba(255, 192, 203, 0.9);"></li>
-            <li style="background-color: rgba(0, 0, 0, 0.9);"></li>
-            <li style="background-color: rgba(128, 128, 128, 0.9);"></li>
-            <li style="background-color: rgba(245, 245, 245, 0.9);"></li>
-          </ul>
-        </div>
       </div>
     </div>
-    <nav class="action-btn" data-target="#dropdown">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="actionBtnIcon">
-        <path d="M78.6 5C69.1-2.4 55.6-1.5 47 7L7 47c-8.5 8.5-9.4 22-2.1 31.6l80 104c4.5 5.9 11.6 9.4 19 9.4l54.1 0 109 109c-14.7 29-10 65.4 14.3 89.6l112 112c12.5 12.5 32.8 12.5 45.3 0l64-64c12.5-12.5 12.5-32.8 0-45.3l-112-112c-24.2-24.2-60.6-29-89.6-14.3l-109-109 0-54.1c0-7.5-3.5-14.5-9.4-19L78.6 5zM19.9 396.1C7.2 408.8 0 426.1 0 444.1C0 481.6 30.4 512 67.9 512c18 0 35.3-7.2 48-19.9L233.7 374.3c-7.8-20.9-9-43.6-3.6-65.1l-61.7-61.7L19.9 396.1zM512 144c0-10.5-1.1-20.7-3.2-30.5c-2.4-11.2-16.1-14.1-24.2-6l-63.9 63.9c-3 3-7.1 4.7-11.3 4.7L352 176c-8.8 0-16-7.2-16-16l0-57.4c0-4.2 1.7-8.3 4.7-11.3l63.9-63.9c8.1-8.1 5.2-21.8-6-24.2C388.7 1.1 378.5 0 368 0C288.5 0 224 64.5 224 144l0 .8 85.3 85.3c36-9.1 75.8 .5 104 28.7L429 274.5c49-23 83-72.8 83-130.5zM56 432a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/>
-      </svg>
-    </nav>
-  </header>
-  
-  <main>
-    <p id="page"></p>
-  </main>
-  
-  <script>
-    const actionBtn= document.querySelector(".action-btn");
-    const dropMenu = document.querySelector(".drop-menu");
-    actionBtn.addEventListener('click', ()=>{
-      console.log(actionBtn.classList)
-      dropMenu.classList.toggle('show');
-    });
 
-    (function setTextToPage(){
+    <div class="btn" id="btn">+</div>
+  </div>
+  <main>
+    <p id="page">&nbsp;</p>
+  </main>
+<script>
+  const btn=document.getElementById("btn");
+  const menu=document.getElementById('menu');
+  
+  btn.addEventListener('click', animateMenu);
+  
+  (function setTextToPage(){
       let page=document.getElementById("page");
       page.innerText=  localStorage.getItem("readingText"); // localStorage से text लो
       localStorage.setItem("readingText", " ");
-    })();
-    
-    
-    document.getElementById("font-size-range").addEventListener("input", (event) => {
-      page.style.fontSize = fontsizeBtn.value + "px";
+  })();
+
+  let isOpen = false;
+  function animateMenu(){
+    if (!isOpen) {
+      menu.classList.remove('hide-anim');
+      menu.classList.add('show');
+      isOpen = true;
+    } else {
+      menu.classList.remove('show');
+      menu.classList.add('hide-anim');
+
+      // Animation ke baad menu hide karna
+      setTimeout(() => {
+        menu.style.display = 'none';
+      }, 400); // Match animation duration
+      isOpen = false;
+    }
+
+    // Jab open ho, toh display flex set karo
+    if (menu.style.display === 'none' || menu.style.display === '') {
+      menu.style.display = 'flex';
+    }
+  }
+  document.getElementById("font-size-range").addEventListener("input", (event) => {
+      page.style.fontSize = event.target.value + "px";
     });
-
+  document.getElementById("menu").addEventListener("click",()=> changeColor(event));
     
-    
-    document.getElementById("setting").addEventListener("click",()=> changeColor(event));
-    
-    function changeColor(event){
-      // console.log(event.target.tagName);
-      // agar click kisi LI par hua hai
-      if (event.target.tagName === "LI") {
-        const clickedColor = event.target.style.backgroundColor;
+  function changeColor(event){
+    // console.log(event.target.tagName);
+    // agar click kisi LI par hua hai
+    if (event.target.tagName === "DIV") {
+      const clickedColor = event.target.style.backgroundColor;
 
-        // check karo ki wo kis list ka child hai
-        const parentUlId = event.target.parentElement.id;
-
-        if (parentUlId === "PageColorList") {
-          page.style.backgroundColor = clickedColor;
-        } else if (parentUlId === "fontColorList") {
-          page.style.color = clickedColor;
-        }
+      // check karo ki wo kis list ka child hai
+      const parentUlId = event.target.parentElement.parentElement.id;
+      // console.log(parentUlId);
+      if (parentUlId === "PageColorList") {
+        page.style.backgroundColor = clickedColor;
+      } else if (parentUlId === "fontColorList") {
+        page.style.color = clickedColor;
       }
     }
-  </script>
+  }
+</script>
 </body>
 </html>
