@@ -19,7 +19,7 @@ box-sizing: border-box;
 font-family: ComicReal;
 }
 .wapper{
-position: absolute;
+position: fixed;
 bottom:5rem;
 right:5rem;
 }
