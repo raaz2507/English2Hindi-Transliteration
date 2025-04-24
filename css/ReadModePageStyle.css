@@ -23,20 +23,13 @@ position: absolute;
 bottom:5rem;
 right:5rem;
 }
-.menu {
-width:45rem !important;
-position: absolute;
-right:5rem;
-bottom:0;
-background-color: rgba(255, 0, 0, 0.356);
-box-shadow: 0 0px 10px 1px rgba(0, 0, 0, 0.4) ;
-}
+
 .menu {
 display: none;
 position: absolute;
 right: 5rem;
 bottom: 0;
-width: 40rem;
+width: 45rem;
 background-color: rgba(0, 255, 213, 0.8);
 box-shadow: 0 0px 10px 1px rgba(0, 0, 0, 0.4);
 border-radius: 10px;
@@ -117,23 +110,38 @@ background-color: rgba(255, 255, 255, 0.88);
 border-radius: 10px;
 }
 @keyframes dropDown {
-from {
-  transform: translateY(-30px);
-  opacity: 0;
-}
-to {
-  transform: translateY(0);
-  opacity: 1;
-}
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes dropUp {
-from {
-  transform: translateY(0);
-  opacity: 1;
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
 }
-to {
-  transform: translateY(-30px);
-  opacity: 0;
-}
+@media only screen and (max-width:1000px){
+  .menu {
+    flex-direction: column;
+    width:auto ;
+  }
+
+  .menu div {
+    margin: 2% auto;
+  }
+
+  .menu div ul {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
