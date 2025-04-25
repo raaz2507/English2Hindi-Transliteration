@@ -2,6 +2,16 @@
   font-family: myFont;
   src: url('./../font/ComicReal-LVGZn.otf');
 }
+:root{
+  --bodyColor:white;
+  --contenerColor: rgba(0, 0, 0, 0.637);
+  --headerColor: rgba(48, 207, 0, 0.846);
+  --mainColor:orange;
+  --footerColor: rgba(255, 228, 196, 0.866);
+  --DefultTextColor: rgb(255, 255, 255);
+  --TextAreabackGround: rgba(255, 228, 196, 0.921);
+  --DisplayColor: rgba(135, 207, 235, 0.575);
+} 
 * {
   padding: 0;
   margin: 0;
@@ -16,27 +26,28 @@ html,body {
 body{
   width:100%;
   height:100%;
-  background: yellow url("./../img/hindi.svg");
+  /* padding:2%; */
+  background: var(--bodyColor) url("./../img/hindi.svg");
 }
   
 #contener{
-  width:95%;
+  width:98%;
   height:98vh;
   margin:2% auto;
   border-radius: 10px;
-  box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, 0.637);
+  box-shadow: 1px 1px 4px 2px var(--contenerColor);
 }
 header{
   width:100%;
   padding:2%;
-  background-color: rgba(255, 255, 0, 0.887);
+  background-color: var(--headerColor);
   /* opacity:0.7; */
   border-radius: 10px 10px 0 0;
   
 }
 header #heading{
   width:40%;
-  font-size: 4em;
+  font-size: 3rem;
   font-weight: 900;
   margin:auto;
   text-align: center;
@@ -50,17 +61,17 @@ header #heading p{
   background-repeat: no-repeat;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-color: white;
+  background-color: var(--DefultTextColor);
 }
-header #heading p a{
+header #heading p a{/
   text-decoration: none;
 }
 header #setting {
-  font-size: 1.2em;
+  font-size: 1em;
   padding:2%;
   background-color: rgba(0, 0, 0, 0.51);
   /* opacity: 0.5; */
-  color:rgb(255, 255, 255);
+  color:var(--DefultTextColor);
   border-radius: 10px;
 }
 header #setting div{
@@ -71,14 +82,14 @@ header #setting div{
 header #setting div button{
   font-size: 1em;
   margin:2%;
-  padding:1%;
+  padding:2%;
   text-transform: capitalize;
   border-radius: 10px;
 }
 header #display{
-  font-size: 1.3em;
+  font-size: 1em;
   border-radius: 10px;
-  background-color: rgba(135, 207, 235, 0.575);
+  background-color: var(--DisplayColor);
   padding:2%;
   /* opacity: 0.5; */
 }
@@ -94,35 +105,37 @@ header #display input[type="text"]{
   width:30%;
   text-align: center;
   margin:2% auto;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px 4px 1px black;
 }
 
 main{
-  background-color: rgba(255, 118, 21, 0.866);
+  background-color: var(--mainColor);
   height:80%;
   /* opacity: 0.8; */
 }
-main #action-btn{
+main .action-btn{
   padding:2%;
 }
-main #action-btn button{
+main .action-btn button{
   padding:1%;
   /* margin:2%; */
-  font-size: 100%;
+  font-size: 1rem;
   border-radius: 10px;
   min-width:10%;
   text-transform: uppercase;
   transition: transform .2s ease;
 }
-main #action-btn button:hover{
+main .action-btn button:hover{
   transform: scale(1.2);
 }
-main #action-btn #pasteBtn {
+main .action-btn #pasteBtn {
   background-color: rgba(0, 251, 255, 0.89);
 }
-main #action-btn #convertBtn {
+main .action-btn #convertBtn {
   background-color: rgba(171, 255, 45, 0.818);
 }
-main #action-btn #copyBtn {
+main .action-btn #copyBtn {
   background-color: rgba(237, 128, 237, 0.877);
 }
 main #text-area{
@@ -135,13 +148,14 @@ main #text-area textarea{
   border-radius: 10px;
   padding:1em;
   margin: auto;
-  background-color: rgba(255, 228, 196, 0.921);
+  background-color: var(--TextAreabackGround);
 }
 footer{
-  background-color: rgba(255, 228, 196, 0.866);
+  background-color: var(--footerColor);
   /* opacity: 0.9; */
   border-radius: 0 0 10px 10px;
   padding:1%;
+  
 }
 footer p{
   text-align: right;
@@ -177,7 +191,7 @@ main{
   flex-direction: column;
 
 }
-main #action-btn{
+main .action-btn{
   display:flex;
   flex-direction:row;
   align-items: center;
@@ -205,7 +219,7 @@ main #text-area{
     width:90%;
     margin:1%;
   }
-  main #action-btn button{
+  main .action-btn button{
     font-size: 1.6em;
     padding:1% 4%;
   }
