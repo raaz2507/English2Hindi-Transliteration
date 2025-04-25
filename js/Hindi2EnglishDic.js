@@ -75,6 +75,10 @@
     "mangu" : "मंगू",
     "heera" : "हीरा",
     "kallu" :"कल्लू",
+    "manish": "मनीष",
+    "vinod": "विनोद",
+    "rajesh": "राजेश",
+    "priyanka": "प्रियंका",
   },
   "commonWords": {},
   "cites": {
@@ -5644,6 +5648,15 @@
     "zoro": "ज़ोरो",
     "zorse": "ज़ोर से",
     "zuban": "ज़ुबान",
-    "zulam": "जुल्म"
+    "zulam": "जुल्म",
+    "kro": "करो",
+  "such": "सच",
+  "traf": "तरफ",
+  "krni": "करनी",
+  "zaldi": "जल्दी",
+  "tumahri": "तुम्हारी",
+  "dhadkan": "धड़कन",
+  "yakin": "यक़ीन",
+  "bajah": "वजह",
   }
 }

@@ -86,8 +86,11 @@ class TransliterationEngine{
 
 		function isAlphabet(char) {
 			let desimalValu = char.charCodeAt(0);
-			//devnagri(hindi) 2305-2416
 			return (desimalValu >= 65 && desimalValu <= 90) || (desimalValu >= 97 && desimalValu <= 122);
+		}
+		function isHindiChar(char){
+			let desimalvalue =char.charCodeAt(0);
+			return (desimalvalue>=2305 && desimalvalue<=2416); //devnagri(hindi) 2305-2416
 		}
 	}
 		
@@ -101,7 +104,8 @@ class TransliterationEngine{
 		wordArr.forEach((word) => {
 			wordFound = false;
 			//check karega ki spaical char hai ya nahi
-			if (!this.#isSpecialChar(word)) {
+			let specialCharFleg=this.#isSpecialChar(word);
+			if (!specialCharFleg) {
 				Lword = word.toLowerCase();
 				//Dic ke sub dic ko access karega
 				for (let subDis in dic) {
@@ -118,7 +122,9 @@ class TransliterationEngine{
 			// agar dic me word nahi mila to notFoundWord Aree me word ko push kar dega.
 			if (!wordFound) {
 				outputArr.push(word);
-				notFoundWord.push(word);
+				if(!specialCharFleg){
+					notFoundWord.push(word);
+				}
 			}
 		});
 
@@ -156,7 +162,9 @@ class TransliterationEngine{
 					}
 				});
 			}
-		
+			if (saveWithCount){
+				data= sortObjectByValue(data);
+			}
 			const blob = new Blob([JSON.stringify(data, null, 2)], {
 				type: "application/json",
 			});
@@ -170,24 +178,10 @@ class TransliterationEngine{
 			document.body.removeChild(a);
 			URL.revokeObjectURL(url);
 		}
-		function saveNotFoundWordOld(wordList) {
-			let data = {};
-			filterEngWord(wordList).forEach((word) => {
-				if (word.length !== 1) data[word.toLowerCase()] = "";
-			});
-	
-			const blob = new Blob([JSON.stringify(data, null, 2)], {
-				type: "application/json",
-			});
-			const url = URL.createObjectURL(blob);
-	
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = "notFoundWords.json"; // Download file का नाम
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-			URL.revokeObjectURL(url);
+		function sortObjectByValue(obj) {
+			return Object.fromEntries(
+					Object.entries(obj).sort(([, a], [, b]) => b - a)
+			);
 		}
 		function filterEngWord(wordArr) {
 			const engWord = EngWord; //fetchJson('EnglishWord.json');

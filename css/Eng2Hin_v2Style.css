@@ -52,6 +52,9 @@ header #heading p{
   -webkit-text-fill-color: transparent;
   background-color: white;
 }
+header #heading p a{
+  text-decoration: none;
+}
 header #setting {
   font-size: 1.2em;
   padding:2%;
