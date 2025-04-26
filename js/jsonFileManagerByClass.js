@@ -1,8 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const myDeshbord = new Deshbord();
 	const sortJson = new sortJSONData();
+	setTextToPage(myDeshbord);
 });
-
+function setTextToPage(dashBord){
+	console.log(localStorage.getItem("JSON_Dic_Data"));
+	dashBord.PreTextArea.innerText=  localStorage.getItem("JSON_Dic_Data"); // localStorage से text लो
+	localStorage.setItem("JSON_Dic_Data", " ");
+}
 class Deshbord {
 	constructor() {
 		this.#getElements();

@@ -4,6 +4,14 @@ const ShortBtn = document.getElementById("Short");
 const PreTextArea= document.getElementById('FilePreview');
 const ShortTextArea= document.getElementById('ShortdJSON');
 
+
+(function setTextToPage(){
+    console.log(localStorage.getItem("JSON_Dic_Data"));
+    PreTextArea.innerText=  localStorage.getItem("JSON_Dic_Data"); // localStorage से text लो
+    localStorage.setItem("JSON_Dic_Data", " ");
+})();
+
+
 let preJOSNData;
 let ShortedJSONData;
 fontSize.addEventListener('change', e=>{
@@ -62,3 +70,5 @@ function openFile(event){
             alert("Please select a valid JSON file.");
         }
 }
+
+

@@ -20,18 +20,20 @@
 						<br />
 					</div>
 					<div>
-						<label for="file">Do u want save non-find words in json file ?
+						<label for="file">Do u want Automatically save non-find words in json file ?</label>
 							<br>
-								<label for="yes">Yes<input type="radio" name="saveJSON" id="yes" value="true" /></label>
+								<label for="yes">Yes</label>
+								<input type="radio" id='yes' name="saveJSON" value="1" />
 									&nbsp;&nbsp;
-								<label for="no">No<input type="radio" name="saveJSON" id="no" value="false" checked /><br></label>
-								<label><input type="radio" name="saveJSON" value="true">Save with Frequency</label>
+								<label for="no">No</label>
+								<input type="radio" id="no" name="saveJSON" value="0" checked /><br>
+								<label for="saveWithCount">Save with Frequency</label>
+								<input type="radio" name="saveJSON" id="saveWithCount" value="2">
 					
 							<div>
-								<button id="ReadingModeBtn">Reading Mode</button>
-								<button id="saveTxt">save as txt Files</button>
+								<button id="ReadJSONBtn">Read JSON Mode</button>
+								<button id="saveJSONBtn">save JSON Files</button>
 							</div>
-						</label>
 					</div>
 				</div>
 				<div id="display">
@@ -56,17 +58,19 @@
 			<div class="input-area text-area">
 				<div class="action-btn">
 					<button id="pasteBtn">paste</button>
-					<button id="OpenTextFile">Open Text File</button>
-					<button id="saveTextFile">Save Text File</button>
-					<button id="ReadingModeBtn">Reading Mode</button>
+					
+					<!-- <button id="OpenTextFileBtn">Open Text File</button> -->
+					<button id="saveInputTextBtn">Save Text File</button>
+					<button id="PublishInputTextBtn">Reading Mode</button>
+					<input type="file" name="OpenTextFileBtn" id="OpenTextFileBtn" style="margin-top:2%; font-size: 1em;">
 				</div>
 				<textarea name="input" id="input-text" placeholder="Enter or Copy/Paste Your text here."></textarea>
 			</div>
 			<div class="output-area text-area">
 				<div class="action-btn">
 					<button id="copyBtn">copy</button>
-					<button id="saveTxt">save as txt Files</button>
-					<button id="ReadingModeBtn">Reading Mode</button>
+					<button id="saveOutputTextBtn">save as txt Files</button>
+					<button id="PublishOutputTextBtn">Reading Mode</button>
 				</div>
 				<textarea name="output" id="output-text" placeholder="Your Output" readonly></textarea>
 			</div>
