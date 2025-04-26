@@ -46,12 +46,12 @@ class TransliterationEngine{
 	}
 	convertText(inputText) {
 		let WordArr=this.#StringToArre(inputText);
-		console.log(WordArr);
+		// console.log(WordArr);
 		this.totalWordLength = WordArr.length; //geting data for display
 		let outputArr = this.#tranText(WordArr);
-		console.log(outputArr);
+		// console.log(outputArr);
 		let outputStr = this.#Arry2StringForOutput(outputArr);
-		console.log(outputStr);
+		// console.log(outputStr);
 		return outputStr;
 		// outputTextBox.value = outputStr;
 		//	// text को localStorage में store करो

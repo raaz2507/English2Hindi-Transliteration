@@ -6,6 +6,7 @@
 		<title>English2Hindi V2</title>
 		<link rel="stylesheet" href="./css/Eng2Hin_v2Style.css">
 </head>
+
 <body>
 	<div id="contener">
 		<header>
@@ -48,15 +49,25 @@
 					</div>
 			</div>
 		</header>
+		<aside>
+			<button id="convertBtn">convert</button>
+		</aside>
 		<main>
-			<div class="action-btn">
-				<!-- <button onclick="pasteText()" id="pasteBtn">paste</button> -->
-				<button id="pasteBtn">paste</button>
-				<button id="convertBtn">convert</button>
-				<button id="copyBtn">copy</button>
-			</div>
-			<div id="text-area">
+			<div class="input-area text-area">
+				<div class="action-btn">
+					<button id="pasteBtn">paste</button>
+					<button id="OpenTextFile">Open Text File</button>
+					<button id="saveTextFile">Save Text File</button>
+					<button id="ReadingModeBtn">Reading Mode</button>
+				</div>
 				<textarea name="input" id="input-text" placeholder="Enter or Copy/Paste Your text here."></textarea>
+			</div>
+			<div class="output-area text-area">
+				<div class="action-btn">
+					<button id="copyBtn">copy</button>
+					<button id="saveTxt">save as txt Files</button>
+					<button id="ReadingModeBtn">Reading Mode</button>
+				</div>
 				<textarea name="output" id="output-text" placeholder="Your Output" readonly></textarea>
 			</div>
 		</main>

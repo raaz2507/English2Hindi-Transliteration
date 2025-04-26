@@ -20,19 +20,21 @@
   /* border: 2px solid red; */
 }
 
-html,body {
+html {
   width: 100%;
+  height:100%;
 }
 body{
   width:100%;
-  height:100%;
+  min-height:100vh;
   /* padding:2%; */
   background: var(--bodyColor) url("./../img/hindi.svg");
+  position: relative;
 }
   
 #contener{
   width:98%;
-  height:98vh;
+  height:100%;
   margin:2% auto;
   border-radius: 10px;
   box-shadow: 1px 1px 4px 2px var(--contenerColor);
@@ -63,7 +65,7 @@ header #heading p{
   -webkit-text-fill-color: transparent;
   background-color: var(--DefultTextColor);
 }
-header #heading p a{/
+header #heading p a{
   text-decoration: none;
 }
 header #setting {
@@ -90,7 +92,7 @@ header #display{
   font-size: 1em;
   border-radius: 10px;
   background-color: var(--DisplayColor);
-  padding:2%;
+  padding:1%;
   /* opacity: 0.5; */
 }
 header #display div{
@@ -101,7 +103,7 @@ header #display label{
   width:60%;
 }
 header #display input[type="text"]{
-  font-size: 1.3em;
+  font-size: 1em;
   width:30%;
   text-align: center;
   margin:2% auto;
@@ -109,47 +111,58 @@ header #display input[type="text"]{
   box-shadow: 1px 1px 1px 4px 1px black;
 }
 
+aside{
+  position: fixed;
+  bottom:5rem;
+  right:5rem;
+  z-index: 5;
+}
+aside button{
+  width:5rem;
+  height:5rem;
+  border-radius: 50%;
+  padding: 2%;
+  font-size: 1em;
+  color:rgba(172, 255, 47, 1);
+  background-color:rgba(100, 148, 237, 0.7);
+}
 main{
-  background-color: var(--mainColor);
-  height:80%;
-  /* opacity: 0.8; */
-}
-main .action-btn{
-  padding:2%;
-}
-main .action-btn button{
+  height:60%;
   padding:1%;
-  /* margin:2%; */
-  font-size: 1rem;
+}
+main .text-area{
   border-radius: 10px;
-  min-width:10%;
-  text-transform: uppercase;
-  transition: transform .2s ease;
+  height: 100%;
+  margin: 1% auto;
 }
-main .action-btn button:hover{
-  transform: scale(1.2);
+main .text-area .action-btn{
+  width: 90%;
+  background-color: rgba(218, 165, 32, 0.8);
+  border-radius: 10px;
+  padding:2%;
+  margin: 1%;
 }
-main .action-btn #pasteBtn {
-  background-color: rgba(0, 251, 255, 0.89);
+main .text-area .action-btn button{
+  font-size: 1.3em;
+  padding:1% 2%;
+  
 }
-main .action-btn #convertBtn {
-  background-color: rgba(171, 255, 45, 0.818);
-}
-main .action-btn #copyBtn {
-  background-color: rgba(237, 128, 237, 0.877);
-}
-main #text-area{
-  height:90%;
-}
-main #text-area textarea{
-  resize: none;
-  width:48%;
-  height:90%;
+main .text-area textarea{
+  width:98%;
+  height: 30vh;
   border-radius: 10px;
   padding:1em;
-  margin: auto;
-  background-color: var(--TextAreabackGround);
+  resize: none;
+  background-color: rgba(255, 228, 196, 0.9);
+  /* height: 100%; */
 }
+main .input-area{
+  background-color: rgba(137, 43, 226, 0.7);
+}
+main .output-area{
+  background-color: rgba(220, 20, 60, 0.8);
+}
+
 footer{
   background-color: var(--footerColor);
   /* opacity: 0.9; */
@@ -187,27 +200,74 @@ header #display{
   justify-content: space-evenly;
 }
 main{
-  display: flex;
-  flex-direction: column;
-
-}
-main .action-btn{
-  display:flex;
-  flex-direction:row;
-  align-items: center;
-  justify-content: space-evenly;
-}
-main #text-area{
-  flex: 1 1 80%;
   display:flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  gap:2%;
+}
+
+main .text-area{
+  flex: 1 1 48%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap:2%;
+}
+main .text-area .action-btn{
+  flex: 0 0 15%;
+}
+main .text-area textarea{
+  flex: 1 1 auto;
+}
+main .text-area .action-btn{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-evenly;
 }
 
 /* flex setting end */
 
-@media only screen and (max-width: 1000px){
+/* shine animation on button start */
+aside button {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+aside button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  /* left: -75%; */
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  transform: skewX(-25deg);
+}
+
+aside button:hover::after {
+  animation: shine 1s forwards;
+}
+@keyframes shine {
+  0% {
+    left: -75%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+/* shine aniamation on button end */
+
+
+@media only screen and (max-aspect-ratio: 3/4){
   header{
     flex-direction: column;
     
@@ -219,15 +279,22 @@ main #text-area{
     width:90%;
     margin:1%;
   }
-  main .action-btn button{
-    font-size: 1.6em;
-    padding:1% 4%;
-  }
-  main #text-area{
+  main {
     flex-direction: column;
   }
-  main #text-area textarea{
-    width:95%;
+  main .text-area .action-btn button{
+    font-size: 1em;
     margin: 2% auto;
+  }
+  aside{
+    bottom:3rem;
+    right: 2rem;
+  }
+  aside button{
+    width :4rem;
+    height: 4rem;
+  }
+  main .text-area {
+    width:98%;
   }
 }
