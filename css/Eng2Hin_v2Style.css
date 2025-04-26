@@ -267,7 +267,7 @@ aside button:hover::after {
 /* shine aniamation on button end */
 
 
-@media only screen and (max-aspect-ratio: 3/4){
+@media only screen and (orientation: portrait){
   header{
     flex-direction: column;
     
