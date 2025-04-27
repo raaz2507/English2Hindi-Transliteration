@@ -96,9 +96,9 @@ function	setEventsOnBtn(elmt, Dashbord, tran_Engine, jsonFile){
 	}
 }
 class JSONFileMange{
-	async fetchJson(filename = "./Hindi2EnglishDic.json") {
+	async fetchJson(file = "./Hindi2EnglishDic.json") {
 		try {
-			const response = await fetch(filename);
+			const response = await fetch(file);
 			if (!response.ok) {
 				throw new Error("Network Response was not ok..");
 			}

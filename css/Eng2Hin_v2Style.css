@@ -27,6 +27,7 @@ html {
 body{
   width:100%;
   min-height:100vh;
+  padding-bottom:0.2%;
   /* padding:2%; */
   background: var(--bodyColor) url("./../img/hindi.svg");
   position: relative;
