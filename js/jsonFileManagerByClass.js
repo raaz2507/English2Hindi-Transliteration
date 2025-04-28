@@ -1,39 +1,78 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const JsonMagicSorter = new JsonOrganizer();
 	const myDeshbord = new Deshbord();
-	main(myDeshbord, JsonMagicSorter);
+	setEventOnElements(myDeshbord, JsonMagicSorter);
 });
 
-function main(myDeshbord, myJson){
-	const {SortKeyAsc, SortKeyDesc, SortValueAsc, SortValueDesc}=myDeshbord;
+function setEventOnElements(myDeshbord, myJson){
+	const {SortKeyAscBtn, SortKeyDescBtn, SortValueAscBtn, SortValueDescBtn, swapKey2ValueBtn}=myDeshbord;
+	const {exportInputJson2TxtBtn, exportOutputJson2TxtBtn}=myDeshbord;
 	const {PreTextArea, sortTextArea}=myDeshbord;
 	const {openFileBtn}=myDeshbord;
 	// this.preJOSNData={};
 	// this.sortedJSONData={};
 	
 	//event for open file btn
+	openFileBtn.addEventListener("change", (e) => {
+		console.log("openFIlesddd");
+		const jsonObj=myDeshbord.openFile(e);
+		console.log(jsonObj);
+		PreTextArea.value = JSON.stringify(jsonObj, null, 2);
+	});
+	//event on export json Data
+	exportInputJson2TxtBtn.addEventListener('click', ()=>{
+		console.log('exprtinputData');
+	});
+	exportOutputJson2TxtBtn.addEventListener('click',()=>{
+		console.log('exprtOutputData');
+	});
 
+	//event on swap key2 value
+	swapKey2ValueBtn.addEventListener('click',()=>{
+		let jsonData= getJsonFromTextArea(PreTextArea);
+		const swapedValue= myJson.swapObjKeyValue(jsonData);
+		sortTextArea.value = JSON.stringify(swapedValue, null, 1);
+	})
 
 	//event for sort json
-	SortKeyAsc.addEventListener('click', ()=>{
-		let jsonData= JSON.parse(PreTextArea.value);
-		const sortedJsonData = myJson.sortObjectByKey(jsonData, true);
+	SortKeyAscBtn.addEventListener('click', ()=>{
+		let jsonData= getJsonFromTextArea(PreTextArea);
+		const sortedJsonData = myJson.sortObjByKey(jsonData, true);
 		sortTextArea.value = JSON.stringify(sortedJsonData,null, 1);
 	});
 
-	SortKeyDesc.addEventListener('click', ()=>{
-		let jsonData= JSON.parse(PreTextArea.value);
-		const sortedJsonData = myJson.sortObjectByKey(jsonData, false);
+	SortKeyDescBtn.addEventListener('click', ()=>{
+		let jsonData= getJsonFromTextArea(PreTextArea);
+		const sortedJsonData = myJson.sortObjByKey(jsonData, false);
 		sortTextArea.value = JSON.stringify(sortedJsonData, null, 1);
 	});
 
-	SortValueAsc.addEventListener('click', ()=>{
-		sortTextArea.value = myJson.SortValueAsc(PreTextArea.value);
+	SortValueAscBtn.addEventListener('click', ()=>{
+		console.log("clicked");
+		let jsonData= getJsonFromTextArea(PreTextArea);
+		const sortedJsonData = myJson.sortObjectByValue(jsonData, true);
+		sortTextArea.value = JSON.stringify( sortedJsonData, null, 1 );
 	});
 
-	SortValueDesc.addEventListener('click', ()=>{
-		sortTextArea.value = myJson.SortValueDesc(PreTextArea.value);
+	SortValueDescBtn.addEventListener('click', ()=>{
+		console.log("clicked");
+		let jsonData= getJsonFromTextArea(PreTextArea);
+		const sortedJsonData = myJson.sortObjectByValue(jsonData, false);
+		sortTextArea.value = JSON.stringify( sortedJsonData, null, 1 );
 	});
+	function getJsonFromTextArea(TextArea){
+		if (!TextArea || TextArea.value===''){
+			alert("text area empty or Not found");
+		}
+		try{
+			const jsonObj = JSON.parse(TextArea.value);
+			return jsonObj;
+		}catch(error){
+			alert("Invalid JSON format. Please check your input.");
+			console.log(error);
+			return {};
+		}
+	}
 }
 
 
@@ -44,30 +83,32 @@ class Deshbord {
 		this.#setTextToPage();
 	}
 	#getElements() {
-		this.fontSize = document.getElementById("FontSize-range");
-		this.openFileBtn = document.getElementById("openFileBtn");
+		const elements={
+			fontSize: "FontSize-range",
+			openFileBtn : "openFileBtn",
+			
+			//sorting method
+			SortKeyAscBtn : "SortKeyAscBtn",
+			SortKeyDescBtn : "SortKeyDescBtn",
+			SortValueAscBtn : "SortValueAscBtn",
+			SortValueDescBtn : "SortValueDescBtn",
 
-		//openFile
-		this.SortKeyAsc = document.getElementById("SortKeyAsc");
-		this.SortKeyDesc = document.getElementById("SortKeyDesc");
-		this.SortValueAsc = document.getElementById("SortValueAsc");
-		this.SortValueDesc = document.getElementById("SortValueDesc");
-
-		//saveJson file Btn
-		this.exportOutputJson2TxtBtn = document.getElementById('exportOutputJson2TxtBtn');
-		this.exportInputJson2TxtBtn = document.getElementById('exportInputJson2TxtBtn');
-		//display textArea
-		this.PreTextArea = document.getElementById("FilePreview");
-		this.sortTextArea = document.getElementById("sortdJSON");
+			//saveJson file Btn
+			exportOutputJson2TxtBtn: 'exportOutputJson2TxtBtn',
+			exportInputJson2TxtBtn: 'exportInputJson2TxtBtn',
+			
+			//swapt key2value 
+			swapKey2ValueBtn :'swapKey2ValueBtn',
+			
+			//display textArea
+			PreTextArea : "FilePreview",
+			sortTextArea : "sortdJSON",
+		};
+		for( const [key, value] of Object.entries(elements)){
+			this[key]= document.getElementById(value);
+		}
 	}
-	#setEventOnElements(myJson) {
-		
-		//event for open File
-		this.openFileBtn.addEventListener("change", (e) => {
-			const jsonObj=this.#openFile(e);
-			console.log(jsonObj);
-			this.PreTextArea.value = JSON.stringify(jsonObj, null, 2);
-		}); 
+	#setEventOnElements(myJson) { 
 
 		//this for change font size
 		this.fontSize.addEventListener("change", (e) => {
@@ -75,7 +116,7 @@ class Deshbord {
 			this.sortTextArea.style.fontSize = `${e.target.value}px`;
 		});
 	}
-	async #openFile(event) {
+	async openFile(event) {
 				return new Promise((resolve, reject) => {
 						const file = event.target.files[0];
 						if (file && file.type === "application/json") {
@@ -95,14 +136,14 @@ class Deshbord {
 		#setTextToPage(){
 			const jsonData= localStorage.getItem("JSON_Dic_Data");
 			// console.log(jsonData);
-			if (jsonData!==''){
+			if (jsonData){
 				this.PreTextArea.value=	jsonData; // localStorage से text लो
 				// localStorage.setItem("JSON_Dic_Data", "");
 			}
 		}
 }
-class JsonOrganizer{
 
+class JsonOrganizer{
 	async fetchJson(file) {
 		try {
 			const response = await fetch(file);
@@ -116,79 +157,61 @@ class JsonOrganizer{
 			return null;
 		}
 	}
-
-	sortObjectByKey(obj, ascendingOrder = true) {
-    if (typeof obj === 'object' && obj !== null && !Array.isArray(obj)) {
-        let sorted = {};
-        Object.keys(obj)
-            .sort((a, b) => {
-                if (ascendingOrder) {
-									console.log("a");
-                    return a.localeCompare(b);
-                } else {
-										console.log("d");
-                    return b.localeCompare(a);
-                }
-            })
-            .forEach(key => {
-                sorted[key] = this.sortObjectByKey(obj[key], ascendingOrder); // Recursive call ke sath order pass karo
-            });
-        return sorted;
-    }
-    return obj;
-	}
-
-}
-class JsonOrganizerOld {
-	constructor() {
-		// this.preJOSNData={};
-		// this.sortedJSONData={};
-	}
-	SortValueAsc(){
-		console.log("define the function");
-	}
-	SortValueDesc(){
-		console.log("define the function");
-	}
-
-	sortJSON(preJOSNData) {
-		console.log('sortJosnColled');
-		let sortedJSONData;
-		sortedJSONData = JSON.stringify(preJOSNData);
-		sortTextArea.value = sortedJSONData;
-	}
-	//JSON के keys को अल्फाबेटिकल ऑर्डर में sort करना:
-	sortJsonByKey(jsonData) {
-		const sortedData = {};
-		Object.keys(jsonData)
-			.sort()
-			.forEach((key) => {
-				sortedData[key] = jsonData[key];
-			});
-		return sortedData;
-	}
-	//Inner Keys को भी Sort करना
-	SortJsonByDeepInnerKey(jsonData) {
-		const sortedData = {};
-		Object.keys(jsonData)
-			.sort()
-			.forEach((key) => {
-				if (typeof jsonData[key] === "object" && !Array.isArray(jsonData[key])) {
-					sortedData[key] = this.SortJsonByDeepInnerKey(jsonData[key]); // Recursive call
-				} else {
-					sortedData[key] = jsonData[key];
+	
+	sortObjByKey(obj, order=true){
+		if (typeof obj==='object' && obj !== null){
+			let sortedObj ={};
+			let keys=[];
+			// console.log(obj);
+			if (order){
+				keys=Object.keys(obj).sort((a,b)=> a.localeCompare(b));
+			}else{
+				keys=Object.keys(obj).sort((a,b)=> b.localeCompare(a));
+			}
+			
+			keys.forEach((key)=>{
+				if(typeof obj[key] === 'object' && obj[key] !== null){
+					obj[key] = this.sortObjByKey(obj[key], order);
 				}
+				sortedObj[key]=obj[key];
 			});
-		return sortedData;
+			// console.log(sortedObj);
+
+			return sortedObj;
+		}
+		return obj;
 	}
-	//Values के आधार पर Sort करना
-	sortJsonByValue(jsonData) {
-		const sortedData = {};
-		Object.entries(jsonData)
-			.sort((a, b) => a[1].localeCompare(b[1]))
-			.forEach(([key, value]) => {
-				sortedData[key] = value;
-			});
-		return sortedData;
+	
+	swapObjKeyValue(obj) {
+		if (typeof obj==='object' && obj!==null){
+			let swapedObj={};
+			// console.log(keyValuArry);
+			for (const [key, value] of Object.entries(obj)){
+				if(typeof value=== 'object' && value !== null){
+					swapedObj[key]= this.swapObjKeyValue(value);
+				}else{
+					swapedObj[value]=key;
+				}
+			}
+			return swapedObj;
+		}
+		return obj;
 	}
+	sortObjectByValue(obj,order) {
+		let swaped= this.swapObjKeyValue(obj);
+		console.log(swaped);
+		const sorted= this.sortObjByKey(swaped, order);
+		console.log(sorted);
+		return this.swapObjKeyValue(sorted)
+	}
+}
+//Values के आधार पर Sort करना
+function sortJsonByValue(jsonData) {
+	const sortedData = {};
+	Object.entries(jsonData)
+		.sort((a, b) => a[1].localeCompare(b[1]))
+		.forEach(([key, value]) => {
+			sortedData[key] = value;
+		});
+	return sortedData;
 }

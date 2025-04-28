@@ -130,7 +130,7 @@ footer p{
     align-items: center;
     flex-wrap: nowrap;
     justify-content: space-evenly ;
-    gap:2%;
+    gap:2px;
     padding: 6% 10px;
   }
   #text-Area{

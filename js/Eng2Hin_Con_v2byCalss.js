@@ -2,7 +2,6 @@ import { Dictionary } from "./Hindi2EnglishDic.js";
 import { EngWord } from "./EnglishWord.js";
 
 document.addEventListener('DOMContentLoaded', ()=>{
-
 	 //ye web page se saare element ko capture kar leta hai
 	const allElements= new UIElements();
 	
@@ -154,42 +153,46 @@ class UIElements{
 	constructor(){
 		this.#getVerFormDom();
 	}
-
 	#getVerFormDom(){
-		//setting btn
-		this.fontSizeRange= document.getElementById('font-size-range');
+		const elements={
+			//setting btn
+			fontSizeRange:'font-size-range',
 
-		//JSON related Btn
-		this.ReadJSONBtn=document.getElementById('ReadJSONBtn');
-		this.saveJSONBtn=document.getElementById('saveJSONBtn');
+			//JSON related Btn
+			ReadJSONBtn:'ReadJSONBtn',
+			saveJSONBtn: 'saveJSONBtn',
 
+			//Display status elements
+			totalWordDis:"total_words",
+			notFoundWordsDis: "not_found_words",
+			conversionPercentageDis: "con_per",
 
-		//Display status elements
-		this.totalWordDis=document.getElementById("total_words");
-		this.notFoundWordsDis=document.getElementById("not_found_words");
-		this.conversionPercentageDis=document.getElementById("con_per");
+			//input-textArea btn
+			pasteBtn : 'pasteBtn',
+			OpenTextFileBtn: 'OpenTextFileBtn',
+			saveInputTextBtn: 'saveInputTextBtn',
+			PublishInputTextBtn: 'PublishInputTextBtn',
 
-		//input-textArea btn
-		this.pasteBtn= document.getElementById('pasteBtn');
-		this.OpenTextFileBtn = document.getElementById('OpenTextFileBtn');
-		this.saveInputTextBtn = document.getElementById('saveInputTextBtn');
-		this.PublishInputTextBtn = document.getElementById('PublishInputTextBtn');
+			//outputTextArea btn
+			copyBtn: 'copyBtn',
+			saveOutputTextBtn: 'saveOutputTextBtn',
+			PublishOutputTextBtn: 'PublishOutputTextBtn',
 
-		//outputTextArea btn
-		this.copyBtn= document.getElementById('copyBtn');
-		this.saveOutputTextBtn= document.getElementById('saveOutputTextBtn');
-		this.PublishOutputTextBtn =document.getElementById('PublishOutputTextBtn');
+			//outputTextArea btn
+			convertBtn:'convertBtn',
 
-		//conversion button
-		this.convertBtn= document.getElementById('convertBtn');
-		
-		//converted Text save or read related button
-		this.ReadingModeBtn= document.getElementById('ReadingModeBtn');
-		this.saveTxt=document.getElementById('saveTxt');
+			//converted Text save or read related button
+			ReadingModeBtn: 'ReadingModeBtn',
+			saveTxt: 'saveTxt',
 
-		//text box
-		this.inputTextBox = document.getElementById('input-text');
-		this.outputTextBox = document.getElementById('output-text');
+			//text box
+			inputTextBox: 'inputTextBox',
+			outputTextBox: 'outputTextBox'
+		};
+		//map Elements To DOM
+		for(const [key, value] of Object.entries(elements)){
+			this[key]= document.getElementById(value);
+		}
 	}
 }
 
@@ -273,18 +276,18 @@ class TransliterationEngine{
 		this.totalWordArr=[];
 	}
 	convertText(inputText) {
-		let {totalWordArr}=this;
-		totalWordArr=this.#StringToArre(inputText);
+		let wordArr=[];
+
+		wordArr=this.#StringToArre(inputText);
+
+		this.totalWordArr=wordArr;
+		
 		// console.log(totalWordArr);
-		let outputArr = this.#tranText(totalWordArr);
+		let outputArr = this.#tranText(wordArr);
 		// console.log(outputArr);
 		let outputStr = this.#Arry2StringForOutput(outputArr);
 		// console.log(outputStr);
 		return outputStr;
-		// outputTextBox.value = outputStr;
-		//	// text को localStorage में store करो
-		//	localStorage.setItem("readingText", outputStr);
-		// updateDisplay();
 	}
 
 	#StringToArre(inputText){
