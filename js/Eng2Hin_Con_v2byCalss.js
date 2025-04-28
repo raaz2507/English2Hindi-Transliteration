@@ -1,11 +1,6 @@
 import { Dictionary } from "./Hindi2EnglishDic.js";
 import { EngWord } from "./EnglishWord.js";
 
-{
-	/* block function Define */
-	
-	
-}
 document.addEventListener('DOMContentLoaded', ()=>{
 
 	 //ye web page se saare element ko capture kar leta hai
@@ -62,7 +57,7 @@ function	setEventsOnBtn(elmt, Dashbord, tran_Engine, jsonFile){
 		//this function translate and show string to output box
 		elmt.outputTextBox.value = tran_Engine.convertText(elmt.inputTextBox.value);
 		//this function update display
-		Dashbord.updateDisplay(tran_Engine.totalWord, tran_Engine.notFoundWords);
+		Dashbord.updateDisplay(tran_Engine.totalWordArr, tran_Engine.notFoundWords);
 
 		//Automatic JSON Save File
 		let saveJSONFlag = saveFileSet();
@@ -73,18 +68,7 @@ function	setEventsOnBtn(elmt, Dashbord, tran_Engine, jsonFile){
 		}
 		
 	});
-	/*
-		this.saveJSON= document.querySelector('input[name="saveJSON"]:checked');
 
-		//JSON related Btn
-		this.shouldSaveJSON = document.querySelector('input[name="saveJSON"]:checked');
-	 */
-	function jsonLog(){
-		console.log(document.querySelector('input[name="saveJSON"]:checked').value);
-		console.log(saveFileSet());
-		console.log(tran_Engine.notFoundWords.length);
-		console.log(saveFileSetWithCount());
-	}
 	function saveFileSet() {
 		let select = document.querySelector('input[name="saveJSON"]:checked').value ;
 		return select ? select=== "1": false; //agar null value hoti hai to use filter karta hai
@@ -168,10 +152,10 @@ class JSONFileMange{
 }
 class UIElements{
 	constructor(){
-		this.getVerFormDom();
+		this.#getVerFormDom();
 	}
 
-	getVerFormDom(){
+	#getVerFormDom(){
 		//setting btn
 		this.fontSizeRange= document.getElementById('font-size-range');
 
@@ -251,9 +235,9 @@ class TranslationDashboard{
 			});
 	}
 	openJSONReadingPage(JSON_Data){
-		console.log(JSON_Data);
-		localStorage.setItem("JSON_Dic_Data",JSON.stringify(JSON_Data) );
-		console.log(localStorage.getItem("JSON_Dic_Data"));
+		//console.log(JSON_Data);
+		localStorage.setItem("JSON_Dic_Data",JSON.stringify(JSON_Data, null, 1) );
+		//console.log(localStorage.getItem("JSON_Dic_Data"));
 		window.open('./jsonFileManage.html', '_blank');
 	}
 	openTextReadingPage(text=this.#elmt.outputTextBox.value) {
@@ -286,15 +270,13 @@ class TransliterationEngine{
 	
 	constructor(){
 		this.notFoundWords=[];
-		this.totalWord=[];
-		// this.inputText='';
-		// this.outputText='';
+		this.totalWordArr=[];
 	}
 	convertText(inputText) {
-		let WordArr=this.#StringToArre(inputText);
-		// console.log(WordArr);
-		this.totalWord = WordArr; //geting data for display
-		let outputArr = this.#tranText(WordArr);
+		let {totalWordArr}=this;
+		totalWordArr=this.#StringToArre(inputText);
+		// console.log(totalWordArr);
+		let outputArr = this.#tranText(totalWordArr);
 		// console.log(outputArr);
 		let outputStr = this.#Arry2StringForOutput(outputArr);
 		// console.log(outputStr);
@@ -344,8 +326,8 @@ class TransliterationEngine{
 		const dic = Dictionary;
 		let Lword;
 		let outputArr = [];
-		let notFoundWord = [];
 		let wordFound = false;
+		let notFoundWordArr=[];
 		//Word arre ke each word ko access karega
 		wordArr.forEach((word) => {
 			wordFound = false;
@@ -355,8 +337,7 @@ class TransliterationEngine{
 				Lword = word.toLowerCase();
 				//Dic ke sub dic ko access karega
 				for (let subDis in dic) {
-					//dic ke subDic me word milega to fleg ko true set karga.
-					//aur word ko translated wordArre me add kar dega.
+					/*dic ke subDic me word milega to fleg ko true set karga.aur word ko translated wordArre me add kar dega.*/
 
 					if (dic[subDis].hasOwnProperty(Lword)) {
 						outputArr.push(dic[subDis][Lword]);
@@ -369,12 +350,11 @@ class TransliterationEngine{
 			if (!wordFound) {
 				outputArr.push(word);
 				if(!specialCharFleg){
-					notFoundWord.push(word);
+					notFoundWordArr.push(word);
 				}
 			}
 		});
-
-		this.notFoundWords = notFoundWord; //word length for Not Found Words	for display
+		this.notFoundWords= notFoundWordArr;
 		return outputArr;
 	}
 	
@@ -383,6 +363,7 @@ class TransliterationEngine{
 			/[.,?!'\-:;"@#$%^&*()_+=\[\]{}<>\\/|0-9]|\n|\t/g;
 		return word.length === 1 && specialCharRegex.test(word);
 	}
+	
 	#Arry2StringForOutput(outputArr) {
 		let outputStr = "";
 		outputArr.forEach((word) => {
@@ -395,6 +376,5 @@ class TransliterationEngine{
 
 		return outputStr.trim(); // आखिरी में एक्स्ट्रा स्पेस हटा दो
 	}
+
 }
-
-
