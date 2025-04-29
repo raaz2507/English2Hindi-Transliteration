@@ -61,6 +61,7 @@ function setEventOnElements(myDeshbord, myJson){
         }
     });
 	});
+	
 	copyInputBtn.addEventListener('click', ()=>{
 		myDeshbord.copyText(JSON.stringify(preJsonData, null, 1));
 	});
@@ -82,8 +83,6 @@ function setEventOnElements(myDeshbord, myJson){
 	exportOutputJson2TxtBtn.addEventListener('click',()=>{
 		myDeshbord.export2TxtFile( JSON.stringify( outputJSONData, null, 1));
 	});
-
-
 
 	//event on swap key2 value
 	swapKey2ValueBtn.addEventListener('click',()=>{
