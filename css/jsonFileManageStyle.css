@@ -19,17 +19,19 @@ body{
   width : 98%;
   margin: 0 auto;
   box-sizing:border-box;
-  background-color: rgba(255, 192, 203, 0.9);
+  background-color: rgba(255, 192, 203, 0.7);
   border-radius: 1em;
   padding:1%;
 }
-#control{
-  width:98%;
+
+.controls{
+  width:70%;
   padding:2px;
   background-color: rgba(194, 255, 192, 0.692);
   border-radius: 10px;
+  margin:10px auto;
 }
-#control div{
+.controls div{
   padding:1%;
   margin:1%;
   /* border: 2px solid red; */
@@ -37,43 +39,50 @@ body{
   box-shadow: 0px 1px 14px .5px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
-#control div label{
+.controls div label{
   margin-bottom: 2%;
 }
-#control div .btns{
+.controls div .btns{
   width:100%;
-  padding:2%;
+  padding:6px 12px;
 }
-/* open file button styling start */
-input[type='file']{
-  display: none;
-}
-.openFileLable{
-  border: 2px solid #4CAF50;
-  display: inline-block;
+
+.controls button{
   padding: 6px 12px;
-  cursor: pointer;
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 10px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.openFileLable:hover {
-  background-color: #45a049;
-  transform: scale(1.02);
-}
-/* open file button styling end */
-#control button{
-  padding: 4%;
   background-color: rgba(186, 247, 65, 0.4);
   border-radius: 10px;
   color:rgb(0, 0, 0);
   width:100px;
-  margin:1%;
+  margin:2px 6px;
+}
+main{
+  width:100%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: rgba(255, 0, 0, 0.5);
 }
 
-#text-Area textarea{
-  width:48vw;
+main .text-area{
+  width:48%;
+  padding:6px 12px;
+  background-color: rgba(137, 43, 226, 0.7);
+  border-radius: 10px;
+
+}
+main .text-area .action-btn{
+  width:98%;
+  padding: 3% 12px;
+  border-radius: 10px;
+  background-color: rgba(135, 207, 235, 0.8);
+  margin:0 auto;
+}
+
+main .text-area .action-btn button{
+  padding: 6px 12px;
+}
+
+main .text-area textarea{
+  width:45vw;
   height:60vh;
   margin:1%;
   padding: 2%;
@@ -81,6 +90,25 @@ input[type='file']{
   border-radius: 10px;
   background-color: rgb(165, 229, 255);
 }
+/* open file button styling start */
+input[type='file']{
+  display: none;
+}
+.openFileLable{
+  /* border: 2px solid #4CAF50; */
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  background-color: rgba(76, 175, 79, 0.7);
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.openFileLable:hover {
+  background-color: #45a049;
+  transform: scale(1.02);
+}
+/* open file button styling end */
 footer{
   width:98%;
   margin:1% auto;
@@ -102,30 +130,49 @@ footer p{
   flex-direction: column;
   align-items : center;
   justify-content : space-evenly;
-  
+  gap: 2%;
 }
-#control{
+.controls{
   display:flex;
   flex-direction: row;
   align-items:center;
   justify-content:space-evenly;
   flex-wrap:wrap;
+  
 }
-#control div .btns{
+.controls div .btns{
   display: flex;
   flex-direction: row;
   align-items:center;
   justify-content: space-evenly;
 }
-#text-Area{
+main{
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+ 
+}
+main .action-btn{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap:5%;
+}
+main .action-btn button{
+  flex:1;
+  min-width:min-content;
+}
+main .text-area{
+  display: flex;
+  flex-direction:column;
   align-items: center;
   justify-content:space-evenly;
 }
-/*FlexBox setup start*/
+
+/*FlexBox setup end*/
 @media only screen and (orientation: portrait){
-  #control{
+  .controls{
     flex-direction: column;
     align-items: center;
     flex-wrap: nowrap;
@@ -133,7 +180,16 @@ footer p{
     gap:2px;
     padding: 6% 10px;
   }
-  #text-Area{
+  .text-Area{
     padding: 6px 10px;
+  }
+  main{
+    flex-direction: column;
+  }
+  main .text-area{
+    margin: 2px auto;
+  }
+  main .text-area textarea{
+    width:90vw;
   }
 }

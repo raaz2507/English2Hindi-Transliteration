@@ -6,73 +6,112 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setEventOnElements(myDeshbord, myJson){
 	const {SortKeyAscBtn, SortKeyDescBtn, SortValueAscBtn, SortValueDescBtn, swapKey2ValueBtn}=myDeshbord;
-	const {exportInputJson2TxtBtn, exportOutputJson2TxtBtn}=myDeshbord;
+	const {openFileBtn, copyInputBtn, PasteInputBtn, exportInputJson2TxtBtn}=myDeshbord; 
+	const	{copyOutputBtn, exportOutputJson2TxtBtn}=myDeshbord;
 	const {PreTextArea, sortTextArea}=myDeshbord;
-	const {openFileBtn}=myDeshbord;
-	// this.preJOSNData={};
-	// this.sortedJSONData={};
 	
-	//event for open file btn
-	openFileBtn.addEventListener("change", (e) => {
-		console.log("openFIlesddd");
-		const jsonObj=myDeshbord.openFile(e);
-		console.log(jsonObj);
-		PreTextArea.value = JSON.stringify(jsonObj, null, 2);
+	let preJsonData={};
+	let outputJSONData={};
+	
+	(function getJsonFormLocalStorage(){
+		const jsonData= localStorage.getItem("JSON_Dic_Data");
+		console.log(jsonData);
+		if (jsonData){
+			preJsonData=	JSON.parse(jsonData); // localStorage से text लो
+			updateInputTextArea();
+			//localStorage.removeItem("JSON_Dic_Data"); //to empty local storage
+		}
+	})();
+
+	function updateInputTextArea(){
+		if (preJsonData){
+			try{
+				PreTextArea.value = JSON.stringify(preJsonData, null , 1);
+			}catch(error){
+				alert(`Not Valid JSON Data ${error.message}`)
+			}
+		}
+	}
+
+	function updateOutputTextArea(){
+		console.log(JSON.stringify(outputJSONData));
+		sortTextArea.value = JSON.stringify(outputJSONData, null, 1);
+	}
+	
+
+	//event on input-area json Data
+	
+	openFileBtn.addEventListener("change", (event) => {
+		//event for open file btn
+    const file = event.target.files[0];
+    if (!file) {
+        alert("कोई फ़ाइल चुनी नहीं गई है!");
+        return;
+    }
+
+    const fr = new FileReader();
+    fr.readAsText(file);
+
+    fr.addEventListener("load", () => {
+        try {
+            preJsonData = JSON.parse(fr.result);  // ✅ अब object मिलेगा
+            updateInputTextArea();                // ✅ TextArea अपडेट करो
+        } catch (error) {
+            alert("Invalid JSON file: " + error.message);
+        }
+    });
 	});
-	//event on export json Data
+	copyInputBtn.addEventListener('click', ()=>{
+		myDeshbord.copyText(JSON.stringify(preJsonData, null, 1));
+	});
+
+	PasteInputBtn.addEventListener('click', ()=>{
+		myDeshbord.pasteText(preJsonData);
+		updateInputTextArea();
+	});
+
 	exportInputJson2TxtBtn.addEventListener('click', ()=>{
-		console.log('exprtinputData');
+		myDeshbord.export2TxtFile( JSON.stringify( preJsonData, null, 1));
 	});
+
+	//event on output-area
+	copyOutputBtn.addEventListener('click', ()=>{
+		myDeshbord.copyText(JSON.stringify(outputJSONData, null, 1));
+	});
+
 	exportOutputJson2TxtBtn.addEventListener('click',()=>{
-		console.log('exprtOutputData');
+		myDeshbord.export2TxtFile( JSON.stringify( outputJSONData, null, 1));
 	});
+
+
 
 	//event on swap key2 value
 	swapKey2ValueBtn.addEventListener('click',()=>{
-		let jsonData= getJsonFromTextArea(PreTextArea);
-		const swapedValue= myJson.swapObjKeyValue(jsonData);
-		sortTextArea.value = JSON.stringify(swapedValue, null, 1);
-	})
+		outputJSONData = myJson.swapObjKeyValue(preJsonData);
+		updateOutputTextArea();
+	});
 
 	//event for sort json
 	SortKeyAscBtn.addEventListener('click', ()=>{
-		let jsonData= getJsonFromTextArea(PreTextArea);
-		const sortedJsonData = myJson.sortObjByKey(jsonData, true);
-		sortTextArea.value = JSON.stringify(sortedJsonData,null, 1);
+		outputJSONData = myJson.sortObjByKey(preJsonData, true);
+		updateOutputTextArea();
 	});
 
 	SortKeyDescBtn.addEventListener('click', ()=>{
-		let jsonData= getJsonFromTextArea(PreTextArea);
-		const sortedJsonData = myJson.sortObjByKey(jsonData, false);
-		sortTextArea.value = JSON.stringify(sortedJsonData, null, 1);
+		outputJSONData = myJson.sortObjByKey(preJsonData, false);
+		updateOutputTextArea();
 	});
 
 	SortValueAscBtn.addEventListener('click', ()=>{
-		console.log("clicked");
-		let jsonData= getJsonFromTextArea(PreTextArea);
-		const sortedJsonData = myJson.sortObjectByValue(jsonData, true);
-		sortTextArea.value = JSON.stringify( sortedJsonData, null, 1 );
+		outputJSONData = myJson.sortObjectByValue(preJsonData, true);
+		updateOutputTextArea();
 	});
 
 	SortValueDescBtn.addEventListener('click', ()=>{
-		console.log("clicked");
-		let jsonData= getJsonFromTextArea(PreTextArea);
-		const sortedJsonData = myJson.sortObjectByValue(jsonData, false);
-		sortTextArea.value = JSON.stringify( sortedJsonData, null, 1 );
+		outputJSONData = myJson.sortObjectByValue(preJsonData, false);
+		updateOutputTextArea();
 	});
-	function getJsonFromTextArea(TextArea){
-		if (!TextArea || TextArea.value===''){
-			alert("text area empty or Not found");
-		}
-		try{
-			const jsonObj = JSON.parse(TextArea.value);
-			return jsonObj;
-		}catch(error){
-			alert("Invalid JSON format. Please check your input.");
-			console.log(error);
-			return {};
-		}
-	}
+	
 }
 
 
@@ -80,28 +119,30 @@ class Deshbord {
 	constructor(JsonMagicSorter) {
 		this.#getElements();
 		this.#setEventOnElements(JsonMagicSorter);
-		this.#setTextToPage();
 	}
 	#getElements() {
 		const elements={
 			fontSize: "FontSize-range",
-			openFileBtn : "openFileBtn",
 			
 			//sorting method
 			SortKeyAscBtn : "SortKeyAscBtn",
 			SortKeyDescBtn : "SortKeyDescBtn",
 			SortValueAscBtn : "SortValueAscBtn",
 			SortValueDescBtn : "SortValueDescBtn",
-
-			//saveJson file Btn
-			exportOutputJson2TxtBtn: 'exportOutputJson2TxtBtn',
-			exportInputJson2TxtBtn: 'exportInputJson2TxtBtn',
-			
-			//swapt key2value 
 			swapKey2ValueBtn :'swapKey2ValueBtn',
 			
+			//input-area Btn
+			openFileBtn : "openFileBtn",
+			copyInputBtn : 'copyInputBtn',
+			PasteInputBtn: "PasteInputBtn",
+			exportInputJson2TxtBtn: 'exportInputJson2TxtBtn',
 			//display textArea
 			PreTextArea : "FilePreview",
+			
+			//output area Btn
+			copyOutputBtn: "copyOutputBtn",
+			exportOutputJson2TxtBtn: 'exportOutputJson2TxtBtn',
+			//display textArea
 			sortTextArea : "sortdJSON",
 		};
 		for( const [key, value] of Object.entries(elements)){
@@ -115,32 +156,57 @@ class Deshbord {
 			this.PreTextArea.style.fontSize = `${e.target.value}px`;
 			this.sortTextArea.style.fontSize = `${e.target.value}px`;
 		});
+	}  
+	export2TxtFile(text){
+		try{
+			//creae blob object
+			const blob = new Blob([text], { type: 'text/plain' });
+			
+			let fileName=prompt("enter File Name");
+			if (!fileName) fileName = "untitled";
+			
+			//create temp Objrect
+			const link = document.createElement('a');
+			link.href = URL.createObjectURL(blob);
+			link.download = `${fileName}.txt`;
+			
+			link.click(); //for start download
+			URL.revokeObjectURL(link.href);//remkove download link
+			alert("file Save Sussefuly !!!");
+		}catch(error){
+			alert(`Error saving file: ${error.message}`);
+		}
 	}
-	async openFile(event) {
-				return new Promise((resolve, reject) => {
-						const file = event.target.files[0];
-						if (file && file.type === "application/json") {
-								const reader = new FileReader();
-								reader.onload = function (e) {
-										resolve(e.target.result);
-								};
-								reader.onerror = function () {
-										reject("Error reading file.");
-								};
-								reader.readAsText(file);
-						} else {
-								reject("Please select a valid JSON file.");
-						}
-				});
-		}
-		#setTextToPage(){
-			const jsonData= localStorage.getItem("JSON_Dic_Data");
-			// console.log(jsonData);
-			if (jsonData){
-				this.PreTextArea.value=	jsonData; // localStorage से text लो
-				// localStorage.setItem("JSON_Dic_Data", "");
-			}
-		}
+
+	copyText(textContent) {
+    if (!navigator.clipboard) {
+        alert("Clipboard API is not supported in your browser.");
+        return;
+    }
+
+    navigator.clipboard
+        .writeText(textContent)
+        .then(() => {
+            console.log("Text copied successfully!");
+            alert("Text copied to clipboard ✨");
+        })
+        .catch((err) => {
+            console.error(`Error copying text: ${err}`);
+            alert(`Error copying text: ${err}`);
+        });
+	}
+
+	pasteText(targetTextArea) {
+		navigator.clipboard
+			.readText()
+			.then((text) => {
+				targetTextArea = JSON.parse(text);
+				console.log("paste Text Sussefuly...");
+			})
+			.catch((err) => {
+				alert(`Error to paste text ${err}`);
+			});
+	}
 }
 
 class JsonOrganizer{
