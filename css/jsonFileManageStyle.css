@@ -183,7 +183,7 @@ main .text-area{
     padding: 6% 6%;
     width:auto;
   }
-  .text-Area{
+  .text-area{
     padding: 6px 10px;
   }
   main{
@@ -191,12 +191,12 @@ main .text-area{
   }
   main .text-area{
     margin: 2px auto;
-    width:auto;
+    width:100%;
   }
   main .action-btn{
     flex-wrap: wrap;
   }
   main .text-area textarea{
-    width:90vw;
+    width:100%;
   }
 }

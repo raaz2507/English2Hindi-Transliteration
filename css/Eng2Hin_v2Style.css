@@ -42,7 +42,7 @@ body{
 }
 header{
   width:100%;
-  padding:2%;
+  padding:1% 2%;
   background-color: var(--headerColor);
   /* opacity:0.7; */
   border-radius: 10px 10px 0 0;
@@ -119,35 +119,55 @@ aside{
   z-index: 5;
 }
 aside button{
-  width:5rem;
-  height:5rem;
-  border-radius: 50%;
-  padding: 2%;
-  font-size: 1em;
-  color:rgba(172, 255, 47, 1);
-  background-color:rgba(100, 148, 237, 0.7);
+  width:fit-content;
+  /* height:5rem; */
+  border-radius: 25px;
+  padding: 6px 12px;
+  font-size: 2rem;
+  color:rgb(41, 68, 0);
+  background-color:rgba(5, 247, 255, 0.932);
 }
 main{
   height:60%;
-  padding:1%;
+  padding: 5px 1%;
 }
 main .text-area{
   border-radius: 10px;
   height: 100%;
   margin: 1% auto;
+  padding: 0.5% 0.6%;
 }
 main .text-area .action-btn{
   width: 90%;
   background-color: rgba(218, 165, 32, 0.8);
   border-radius: 10px;
-  padding:2%;
+  padding:1.5% 2%;
   margin: 1%;
 }
 main .text-area .action-btn button{
   font-size: 1.3em;
   padding:1% 2%;
-  
 }
+
+/*open Butoon styling start*/
+input[type='file']{
+  display:none;
+}
+.openFileLabel{
+  display:inline-block;
+  background-color: rgba(79, 131, 2, 0.95);
+  color:rgb(255, 255, 255);
+  width:fit-content;
+  padding:6px 12px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+}
+.openFileLabel:hover{
+  background-color: rgb(255, 255, 255);
+  color: rgba(54, 90, 1, 0.95);
+}
+/*open Butoon styling end*/
+
 main .text-area textarea{
   width:98%;
   height: 30vh;
@@ -217,10 +237,10 @@ main .text-area{
   gap:2%;
 }
 main .text-area .action-btn{
-  flex: 0 0 15%;
+  /* flex: 0 0 15%; */
 }
 main .text-area textarea{
-  flex: 1 1 auto;
+  flex: 1 1 40vh;
 }
 main .text-area .action-btn{
   display: flex;
@@ -271,7 +291,6 @@ aside button:hover::after {
 @media only screen and (orientation: portrait){
   header{
     flex-direction: column;
-    
   }
   header #heading{
     font-size: 2.5em;
@@ -292,8 +311,9 @@ aside button:hover::after {
     right: 2rem;
   }
   aside button{
-    width :4rem;
-    height: 4rem;
+    font-size: 1.5rem;
+    /* width :4rem; */
+    /* height: 4rem; */
   }
   main .text-area {
     width:98%;
