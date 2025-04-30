@@ -14,70 +14,91 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	setEventsOnBtn(allElements, tran_Dash, tran_Engine, jsonFile);
 });
 
+function setEventsOnBtn(elmt, Dashbord, tran_Engine, jsonFile) {
+	const { inputTextBox, outputTextBox, fontSizeRange, OpenTextFileBtn } = elmt;
+	const container = document.getElementById("contener");
 
-function	setEventsOnBtn(elmt, Dashbord, tran_Engine, jsonFile){
-	//setting btn
-	elmt.fontSizeRange.addEventListener("input", ()=> Dashbord.setTextBoxFontSize(elmt.fontSizeRange, elmt.inputTextBox, elmt.outputTextBox));
-	
-	//json file releted btn convertArre2JSON(wordList, saveWithCount)
-	elmt.ReadJSONBtn.addEventListener('click', ()=>{
-		if(tran_Engine.notFoundWords.length){
-			Dashbord.openJSONReadingPage(jsonFile.convertArre2JSON(tran_Engine.notFoundWords, saveFileSetWithCount()));
-		}
-	});
-	elmt.saveJSONBtn.addEventListener('click', ()=>{
-		if (tran_Engine.notFoundWords.length > 0) {
-			jsonFile.saveNotFoundWordAsJSON(tran_Engine.notFoundWords, saveFileSetWithCount());
-		}
-	});
+	// 🎯 Font size adjustment
+	fontSizeRange.addEventListener("input", () =>
+		Dashbord.setTextBoxFontSize(fontSizeRange, inputTextBox, outputTextBox)
+	);
 
-	//inputTextArea Btn
-	elmt.pasteBtn.addEventListener('click',()=> Dashbord.pasteText(elmt.inputTextBox));
-	elmt.saveInputTextBtn.addEventListener('click', ()=>Dashbord.saveTxt(elmt.inputTextBox.value));
-	elmt.PublishInputTextBtn.addEventListener('click', ()=>Dashbord.openTextReadingPage(elmt.inputTextBox.value));
-	elmt.OpenTextFileBtn.addEventListener("change", (e)=> {
-		let file = e.target.files[0];
-		
-		let reader = new FileReader();
+	// 📂 File input handling
+	OpenTextFileBtn.addEventListener("change", (e) => {
+		const file = e.target.files[0];
+		const reader = new FileReader();
+
 		reader.onload = (e) => {
-			elmt.inputTextBox.value = e.target.result; // File content aa gaya
+			inputTextBox.value = e.target.result;
 		};
-		
-		reader.readAsText(file); // ya readAsDataURL(file) for images
+
+		reader.readAsText(file);
 	});
 
-	//OutputTextArea Btn
-	elmt.copyBtn.addEventListener('click', ()=>Dashbord.copyText(elmt.outputTextBox));
-	elmt.saveOutputTextBtn.addEventListener('click', ()=>	Dashbord.saveTxt(elmt.outputTextBox.value));
-	elmt.PublishOutputTextBtn.addEventListener('click', ()=>Dashbord.openTextReadingPage(elmt.outputTextBox.value));
-	
-	//convert text
-	elmt.convertBtn.addEventListener('click', ()=> {
-		//this function translate and show string to output box
-		elmt.outputTextBox.value = tran_Engine.convertText(elmt.inputTextBox.value);
-		//this function update display
-		Dashbord.updateDisplay(tran_Engine.totalWordArr, tran_Engine.notFoundWords);
+	// 💡 Action Map using dictionary instead of switch-case
+	const actionMap = {
+		pasteBtn: () => Dashbord.pasteText(inputTextBox),
 
-		//Automatic JSON Save File
-		let saveJSONFlag = saveFileSet();
-		let JSONWithCountFlag= saveFileSetWithCount();
-		
-		if (tran_Engine.notFoundWords.length > 0 && (saveJSONFlag || JSONWithCountFlag)) {
-			jsonFile.saveNotFoundWordAsJSON(tran_Engine.notFoundWords, JSONWithCountFlag);
+		saveInputTextBtn: () => Dashbord.saveTxt(inputTextBox.value),
+
+		PublishInputTextBtn: () => Dashbord.openTextReadingPage(inputTextBox.value),
+
+		copyBtn: () => Dashbord.copyText(outputTextBox),
+
+		saveOutputTextBtn: () => Dashbord.saveTxt(outputTextBox.value),
+
+		PublishOutputTextBtn: () => Dashbord.openTextReadingPage(outputTextBox.value),
+
+		convertBtn: () => {
+			outputTextBox.value = tran_Engine.convertText(inputTextBox.value);
+			Dashbord.updateDisplay(tran_Engine.totalWordArr, tran_Engine.notFoundWords);
+
+			const saveJSONFlag = saveFileSet();
+			const JSONWithCountFlag = saveFileSetWithCount();
+
+			if (tran_Engine.notFoundWords.length > 0 && (saveJSONFlag || JSONWithCountFlag)) {
+				jsonFile.saveNotFoundWordAsJSON(tran_Engine.notFoundWords, JSONWithCountFlag);
+			}
+		},
+
+		ReadJSONBtn: () => {
+			if (tran_Engine.notFoundWords.length) {
+				const jsonData = jsonFile.convertArre2JSON(
+					tran_Engine.notFoundWords,
+					saveFileSetWithCount()
+				);
+				Dashbord.openJSONReadingPage(jsonData);
+			}
+		},
+
+		saveJSONBtn: () => {
+			if (tran_Engine.notFoundWords.length > 0) {
+				jsonFile.saveNotFoundWordAsJSON(
+					tran_Engine.notFoundWords,
+					saveFileSetWithCount()
+				);
+			}
 		}
-		
+	};
+
+	// 🔘 Event delegation using actionMap
+	container.addEventListener("click", (e) => {
+		const handler = actionMap[e.target.id];
+		if (handler) handler(); // Run mapped function if exists
 	});
 
+	// 🧩 Helper functions
 	function saveFileSet() {
-		let select = document.querySelector('input[name="saveJSON"]:checked').value ;
-		return select ? select=== "1": false; //agar null value hoti hai to use filter karta hai
+		const select = document.querySelector('input[name="saveJSON"]:checked')?.value;
+		return select === "1";
 	}
 
 	function saveFileSetWithCount() {
-		let select = document.querySelector('input[name="saveJSON"]:checked').value ;
-		return select ? select === "2": false;
+		const select = document.querySelector('input[name="saveJSON"]:checked')?.value;
+		return select === "2";
 	}
 }
+
 class JSONFileMange{
 	async fetchJson(file = "./Hindi2EnglishDic.json") {
 		try {

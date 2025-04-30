@@ -118,14 +118,18 @@ aside{
   right:5rem;
   z-index: 5;
 }
-aside button{
+aside #convertBtn{
   width:fit-content;
   /* height:5rem; */
-  border-radius: 25px;
+  border-radius: 10px;
+  border: 4px dashed white;
   padding: 6px 12px;
   font-size: 2rem;
   color:rgb(41, 68, 0);
-  background-color:rgba(5, 247, 255, 0.932);
+  background-color:goldenrod;
+  box-shadow: 1px 1px 14px 2px black;
+  user-select: none;
+  -webkit-user-select: none; 
 }
 main{
   height:60%;
@@ -253,12 +257,12 @@ main .text-area .action-btn{
 /* flex setting end */
 
 /* shine animation on button start */
-aside button {
+aside #convertBtn {
   position: relative;
   overflow: hidden;
   z-index: 1;
 }
-aside button::after {
+aside #convertBtn::after {
   content: "";
   position: absolute;
   top: 0;
@@ -274,7 +278,7 @@ aside button::after {
   transform: skewX(-25deg);
 }
 
-aside button:hover::after {
+aside #convertBtn:hover::after {
   animation: shine 1s forwards;
 }
 @keyframes shine {
@@ -310,7 +314,7 @@ aside button:hover::after {
     bottom:3rem;
     right: 2rem;
   }
-  aside button{
+  aside #convertBtn{
     font-size: 1.5rem;
     /* width :4rem; */
     /* height: 4rem; */
