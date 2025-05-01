@@ -108,6 +108,7 @@ min-height:5rem;
 box-shadow: 1px 1px 4px 3px rgba(54, 54, 54, 0.486);
 background-color: rgba(255, 255, 255, 0.88);
 border-radius: 10px;
+text-align: justify;
 }
 @keyframes dropDown {
   from {

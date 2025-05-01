@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setEventOnElements(myDeshbord, myJson){
 	const {SortKeyAscBtn, SortKeyDescBtn, SortValueAscBtn, SortValueDescBtn, swapKey2ValueBtn}=myDeshbord;
-	const {openFileBtn, copyInputBtn, PasteInputBtn, exportInputJson2TxtBtn}=myDeshbord; 
-	const	{copyOutputBtn, exportOutputJson2TxtBtn}=myDeshbord;
+	const {openFileBtn, copyInputBtn, PasteInputBtn, exportInputJson2FileBtn}=myDeshbord; 
+	const	{copyOutputBtn, exportOutputJson2FileBtn}=myDeshbord;
 	const {PreTextArea, sortTextArea}=myDeshbord;
 	
 	let preJsonData={};
@@ -71,8 +71,8 @@ function setEventOnElements(myDeshbord, myJson){
 		updateInputTextArea();
 	});
 
-	exportInputJson2TxtBtn.addEventListener('click', ()=>{
-		myDeshbord.export2TxtFile( JSON.stringify( preJsonData, null, 1));
+	exportInputJson2FileBtn.addEventListener('click', ()=>{
+		myDeshbord.export2JsonFile( JSON.stringify( preJsonData, null, 1));
 	});
 
 	//event on output-area
@@ -80,8 +80,8 @@ function setEventOnElements(myDeshbord, myJson){
 		myDeshbord.copyText(JSON.stringify(outputJSONData, null, 1));
 	});
 
-	exportOutputJson2TxtBtn.addEventListener('click',()=>{
-		myDeshbord.export2TxtFile( JSON.stringify( outputJSONData, null, 1));
+	exportOutputJson2FileBtn.addEventListener('click',()=>{
+		myDeshbord.export2JsonFile( JSON.stringify( outputJSONData, null, 1));
 	});
 
 	//event on swap key2 value
@@ -134,13 +134,13 @@ class Deshbord {
 			openFileBtn : "openFileBtn",
 			copyInputBtn : 'copyInputBtn',
 			PasteInputBtn: "PasteInputBtn",
-			exportInputJson2TxtBtn: 'exportInputJson2TxtBtn',
+			exportInputJson2FileBtn: 'exportInputJson2FileBtn',
 			//display textArea
 			PreTextArea : "FilePreview",
 			
 			//output area Btn
 			copyOutputBtn: "copyOutputBtn",
-			exportOutputJson2TxtBtn: 'exportOutputJson2TxtBtn',
+			exportOutputJson2FileBtn: 'exportOutputJson2FileBtn',
 			//display textArea
 			sortTextArea : "sortdJSON",
 		};
@@ -156,7 +156,7 @@ class Deshbord {
 			this.sortTextArea.style.fontSize = `${e.target.value}px`;
 		});
 	}  
-	export2TxtFile(text){
+	export2JsonFile(text){
 		try{
 			//creae blob object
 			const blob = new Blob([text], { type: 'text/plain' });
@@ -167,7 +167,7 @@ class Deshbord {
 			//create temp Objrect
 			const link = document.createElement('a');
 			link.href = URL.createObjectURL(blob);
-			link.download = `${fileName}.txt`;
+			link.download = `${fileName}.json`;
 			
 			link.click(); //for start download
 			URL.revokeObjectURL(link.href);//remkove download link
