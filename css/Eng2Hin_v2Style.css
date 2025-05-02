@@ -105,7 +105,7 @@ header #display label{
 }
 header #display input[type="text"]{
   font-size: 1em;
-  width:30%;
+  min-width:50%;
   text-align: center;
   margin:2% auto;
   border-radius: 10px;
