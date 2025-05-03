@@ -7,4 +7,4 @@ export const EngWord=['1','2','3','4','5','6','7','8','9','0','too', 'that',"spr
 	 "if", "would", "mostly","things","over", "simple","from","thing","lets","never", "make","join","we",
 	 "thought","your" ,"went","need","about","said","leave","seriously","at","wanted", "pick","happen", 
 	 "out", "even","age","did",  "thanx","very","still", "gf","again","talk","here","shoping","go","plz",
-   ,	"dr",  "km", "dm" , "of", "mean", "its", "lady", "short", "much", "common"];
+   ,	"dr", "am", "km","don", "dm" , "of", "mean", "its", "lady", "short", "much", "common"];

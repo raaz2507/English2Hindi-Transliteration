@@ -224,9 +224,9 @@ class TranslationDashboard{
 		this.#elmt=elmt;
 	}
 	updateDisplay(totalWords, notFoundWords){
-		this.#elmt.totalWordDis.placeholder = totalWords.length;
-		this.#elmt.notFoundWordsDis.placeholder= notFoundWords.length;
-		this.#elmt.conversionPercentageDis.placeholder= 100-((notFoundWords.length/totalWords.length)*100).toFixed(2);
+		this.#elmt.totalWordDis.value = totalWords.length;
+		this.#elmt.notFoundWordsDis.value= notFoundWords.length;
+		this.#elmt.conversionPercentageDis.value= 100-((notFoundWords.length/totalWords.length)*100).toFixed(2);
 	}
 
 	setTextBoxFontSize(fontSizeRanger=this.#elmt.fontSizeRange, inputTextBox=this.#elmt.inputTextBox, outputTextBox=this.#elmt.outputTextBox){

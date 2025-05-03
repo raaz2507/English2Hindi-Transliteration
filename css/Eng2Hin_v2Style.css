@@ -105,11 +105,27 @@ header #display label{
 }
 header #display input[type="text"]{
   font-size: 1em;
-  min-width:50%;
+  width:30%;
+  max-width:50%;
   text-align: center;
   margin:2% auto;
+  padding:3px 3px;
   border-radius: 10px;
   box-shadow: 1px 1px 1px 4px 1px black;
+  user-select: none;
+  pointer-events: none;
+  background-color: rgb(245, 245, 245);
+}
+header #display #total_words{
+  color: rgb(138, 43, 226)
+}
+
+header #display #not_found_words{
+  color: rgb(255, 0, 0);
+}
+
+header #display #con_per{
+  color: rgb(0, 128, 0);
 }
 
 aside{

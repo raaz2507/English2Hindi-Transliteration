@@ -3,11 +3,11 @@
   src: url('./../font/ComicReal-LVGZn.otf');
 }
 @font-face{
-  font-family: DevLys;
+  font-family: DevLys,;
   src: url('./../font/DevLys_150_Condensed.ttf')
 }
 @font-face{
-  font-family: kalam;
+  font-family: kalam,;
   src: url('./../font/Kalam-Regular.ttf');
 }
 html{
