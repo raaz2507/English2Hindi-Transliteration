@@ -18,7 +18,7 @@ function setEventOnElementsNew(myDeshbord, myJson){
 		if (jsonData){
 			preJsonData=	JSON.parse(jsonData); // localStorage से text लो
 			updateInputTextArea();
-			//localStorage.removeItem("JSON_Dic_Data"); //to empty local storage
+			localStorage.removeItem("JSON_Dic_Data"); //to empty local storage
 		}
 	})();
 	const actionmap={
@@ -48,7 +48,7 @@ function setEventOnElements(myDeshbord, myJson){
 		if (jsonData){
 			preJsonData=	JSON.parse(jsonData); // localStorage से text लो
 			updateInputTextArea();
-			//localStorage.removeItem("JSON_Dic_Data"); //to empty local storage
+			localStorage.removeItem("JSON_Dic_Data"); //to empty local storage
 		}
 	})();
 

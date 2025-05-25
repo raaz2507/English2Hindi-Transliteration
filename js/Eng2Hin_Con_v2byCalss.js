@@ -175,7 +175,7 @@ class UIElements{
 		this.#getVerFormDom();
 	}
 	#getVerFormDom(){
-		const elements={
+		const elemtsMap={
 			//setting btn
 			fontSizeRange:'font-size-range',
 
@@ -211,7 +211,7 @@ class UIElements{
 			outputTextBox: 'outputTextBox'
 		};
 		//map Elements To DOM
-		for(const [key, value] of Object.entries(elements)){
+		for(const [key, value] of Object.entries(elemtsMap)){
 			this[key]= document.getElementById(value);
 		}
 	}

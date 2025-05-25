@@ -27,8 +27,6 @@ html {
 body{
   width:100%;
   min-height:100vh;
-  padding-bottom:10px;
-  /* padding:2%; */
   background: var(--bodyColor) url("./../img/hindi.svg");
   position: relative;
 }
@@ -209,7 +207,7 @@ footer{
   /* opacity: 0.9; */
   border-radius: 0 0 10px 10px;
   padding:0.5% 1%;
-  
+  margin-bottom: 2%;
 }
 footer p{
   text-align: right;
@@ -282,7 +280,7 @@ aside #convertBtn::after {
   content: "";
   position: absolute;
   top: 0;
-  /* left: -75%; */
+  left: -75%;
   width: 50%;
   height: 100%;
   background: linear-gradient(

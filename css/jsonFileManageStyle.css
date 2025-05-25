@@ -25,22 +25,22 @@ body{
 }
 
 .controls{
-  width:70%;
+  width:90%;
   padding:2px;
   background-color: rgba(194, 255, 192, 0.692);
   border-radius: 10px;
   margin:10px auto;
 }
 .controls div{
-  padding:1%;
-  margin:1%;
+  padding:6px 12px;
+  /* margin:1%; */
   /* border: 2px solid red; */
   border-radius:10px;
   box-shadow: 0px 1px 14px .5px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
-.controls div label{
-  margin-bottom: 2%;
+.controls div .labels{
+  margin: 2px 12px;
 }
 .controls div .btns{
   width:100%;
@@ -57,21 +57,21 @@ body{
 }
 main{
   width:100%;
-  padding: 10px;
+  /* padding: 10px; */
   border-radius: 10px;
-  background-color: rgba(255, 0, 0, 0.5);
+  /* background-color: rgba(255, 0, 0, 0.5); */
 }
 
 main .text-area{
   width:48%;
-  padding:6px 12px;
+  padding:12px 12px;
   background-color: rgba(137, 43, 226, 0.7);
   border-radius: 10px;
 
 }
 main .text-area .action-btn{
   width:98%;
-  padding: 3% 12px;
+  padding: 12px 12px;
   border-radius: 10px;
   background-color: rgba(135, 207, 235, 0.8);
   margin:0 auto;
@@ -84,7 +84,7 @@ main .action-btn{
   width:  90%;
 }
 main .text-area textarea{
-  width:45vw;
+  width:95%;
   height:60vh;
   margin:1%;
   padding: 2%;
@@ -131,6 +131,7 @@ footer p{
   display:flex;
   flex-direction: column;
   align-items : center;
+  align-content: stretch;
   justify-content : space-evenly;
   gap: 2%;
 }
@@ -138,6 +139,7 @@ footer p{
   display:flex;
   flex-direction: row;
   align-items:center;
+  /* align-content: stretch; */
   justify-content:space-evenly;
   flex-wrap:wrap;
   
@@ -151,19 +153,21 @@ footer p{
 main{
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-evenly;
 }
 
 main .action-btn{
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-evenly;
-  gap:5%;
+  flex-wrap: wrap;
+  gap:7px;
 }
 main .action-btn button{
-  flex:1;
-  min-width:min-content;
+  /* flex:0 0 20px; */
+  min-width:max-content;
 }
 main .text-area{
   display: flex;

@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reading Mode</title>
-  <link rel="icon" type="image/svg+xml" href="./img/queen.svg">
-  <link rel="stylesheet" href="./css/ReadModePageStyle.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Reading Mode</title>
+	<link rel="icon" type="image/svg+xml" href="./img/queen.svg">
+	<link rel="stylesheet" href="./css/ReadModePageStyle.css">
 </head>
 <body>
-  <div class="wapper">
+	<div class="controls">
+		<div class="wapper">
     
-    <div class="menu" id="menu">
-      <div>
-        <label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
-        <input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" /><br />
-      </div>
-      <div class="page-color">
-        <p class="heading">Page Color</p>
-        <ul id="PageColorList">
-          <li> <div style="background-color: rgba(255, 000, 000, 0.9);"></div></li>
-          <li> <div style="background-color: rgba(218, 165, 032, 0.9);"></div></li>
-          <li> <div style="background-color: rgba(000, 255, 136, 0.9);"></div></li>
-          <li> <div style="background-color: rgba(255, 192, 203, 0.9);"></div></li>
-          <li> <div style="background-color: rgba(000, 000, 000, 0.9);"></div></li>
-          <li> <div style="background-color: rgba(128, 128, 128, 0.9);"></div></li>
-          <li> <div style="background-color: rgba(245, 245, 245, 0.9);"></div></li>
-        </ul>
-      </div>
-      <div class="text-color">
-        <p class="heading">Text Color</p>
-        <ul id="fontColorList">
+      <div class="menu" id="menu">
+        <div>
+          <label for="Font-Size" class="labels">Font-Size</label>
+          <br>
+          <input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" /><br />
+        </div>
+        <div class="page-color">
+          <p class="labels">Page Color</p>
+          <ul id="PageColorList">
+            <li> <div style="background-color: rgba(255, 000, 000, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(218, 165, 032, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(000, 255, 136, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(255, 192, 203, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(000, 000, 000, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(128, 128, 128, 0.9);"></div></li>
+            <li> <div style="background-color: rgba(245, 245, 245, 0.9);"></div></li>
+          </ul>
+        </div>
+        <div class="text-color">
+          <p class="labels">Text Color</p>
+          <ul id="fontColorList">
             <li> <div style="background-color: rgba(255, 000, 000, 1);"></div></li>
             <li> <div style="background-color: rgba(000, 255, 136, 1);"></div></li>
             <li> <div style="background-color: rgba(218, 165, 032, 1);"></div></li>
@@ -37,70 +39,76 @@
             <li> <div style="background-color: rgba(000, 000, 000, 1);"></div></li>
             <li> <div style="background-color: rgba(128, 128, 128, 1);"></div></li>
             <li> <div style="background-color: rgba(245, 245, 245, 1);"></div></li>
-          </ul>
+            </ul>
+        </div>
       </div>
-    </div>
-
-    <div class="btn" id="btn">+</div>
-  </div>
-  <main>
-    <p id="page">&nbsp;</p>
-  </main>
+      <button class="btn" id="btn">+</button>
+	  </div>
+	</div>
+	
+	<main>
+		<p id="page">&nbsp;</p>
+	</main>
 <script>
-  const btn=document.getElementById("btn");
-  const menu=document.getElementById('menu');
-  
-  btn.addEventListener('click', animateMenu);
-  
-  (function setTextToPage(){
-      let page=document.getElementById("page");
-      page.innerText=  localStorage.getItem("readingText"); // localStorage से text लो
-      localStorage.setItem("readingText", " ");
-  })();
+	const btn=document.getElementById("btn");
+	const menu=document.getElementById('menu');
+	
+	btn.addEventListener('click', animateMenu);
+	
+	(function setTextToPage(){
+			let page=document.getElementById("page");
+			page.innerText=	localStorage.getItem("readingText"); // localStorage से text लो
+			localStorage.setItem("readingText", " ");
+	})();
 
-  let isOpen = false;
-  function animateMenu(){
-    if (!isOpen) {
-      menu.classList.remove('hide-anim');
-      menu.classList.add('show');
-      isOpen = true;
-    } else {
-      menu.classList.remove('show');
-      menu.classList.add('hide-anim');
+	let isOpen = false;
+	function animateMenu(){
+		if (!isOpen) {
+			menu.classList.remove('hide-anim');
+			menu.classList.add('show');
+			isOpen = true;
+		} else {
+			menu.classList.remove('show');
+			menu.classList.add('hide-anim');
 
-      // Animation ke baad menu hide karna
-      setTimeout(() => {
-        menu.style.display = 'none';
-      }, 400); // Match animation duration
-      isOpen = false;
-    }
+			// Animation ke baad menu hide karna
+			setTimeout(() => {
+				menu.style.display = 'none';
+			}, 400); // Match animation duration
+			isOpen = false;
+		}
 
-    // Jab open ho, toh display flex set karo
-    if (menu.style.display === 'none' || menu.style.display === '') {
-      menu.style.display = 'flex';
-    }
-  }
-  document.getElementById("font-size-range").addEventListener("input", (event) => {
-      page.style.fontSize = event.target.value + "px";
-    });
-  document.getElementById("menu").addEventListener("click",()=> changeColor(event));
-    
-  function changeColor(event){
+		// Jab open ho, toh display flex set karo
+		if (menu.style.display === 'none' || menu.style.display === '') {
+			menu.style.display = 'flex';
+		}
+	}
+	document.getElementById("font-size-range").addEventListener("input", (event) => {
+    let value =event.target.value;
+    page.style.fontSize = `${value}px`;
+    page.style.lineHeight = `${value*1.3}px`;
+
+	});
+	document.getElementById("menu").addEventListener("click",()=> changeColor(event));
+		
+	function changeColor(event){
+		
     // console.log(event.target.tagName);
-    // agar click kisi LI par hua hai
-    if (event.target.tagName === "DIV") {
-      const clickedColor = event.target.style.backgroundColor;
+		// agar click kisi LI par hua hai
+		if (event.target.tagName === "DIV") {
+      
+			const clickedColor = event.target.style.backgroundColor;
 
-      // check karo ki wo kis list ka child hai
-      const parentUlId = event.target.parentElement.parentElement.id;
-      // console.log(parentUlId);
-      if (parentUlId === "PageColorList") {
-        page.style.backgroundColor = clickedColor;
-      } else if (parentUlId === "fontColorList") {
-        page.style.color = clickedColor;
-      }
-    }
-  }
+			// check karo ki wo kis list ka child hai
+			const parentUlId = event.target.parentElement.parentElement.id;
+			// console.log(parentUlId);
+			if (parentUlId === "PageColorList") {
+				page.style.backgroundColor = clickedColor;
+			} else if (parentUlId === "fontColorList") {
+				page.style.color = clickedColor;
+			}
+		}
+	}
 </script>
 </body>
 </html>
