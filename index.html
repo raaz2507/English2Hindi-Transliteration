@@ -1,63 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url =Hindi2EnglishConvertor V2.html">
-  <link rel="icon" type="image/svg+xml" href="./img/queen.svg">
-
-  <title>English 2 Hindi </title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="./img/queen.svg">
+    <title>English to Hindi Transliteration</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
-<style>
-  :root{
-    --backgroundColor: rgb(255, 255, 255);
-  }
-  html{
-    width: 100vw;
-    height:100%;
-  }
-  body{
-    width:100%;
-    height:100%;
-  }
-  *{
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-  }
-  body{
-    background:  darkblue url('./img/Book_etc.svg');
-  }
-  main{
-    width:100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  a{
-    text-decoration: none;
-  }
-  .btnStyle{
-    font-size: 1.2rem;
-    padding:12px;
-    background-color: rgba(0, 208, 255, 0.9);
-    color:var(--backgroundColor);
-    border-radius: 10px;
-    font-weight: 900;
-    box-shadow: 1px 1px 8px -2px rgba(107, 107, 107, 1);
-    transition: transform  0.6s ease;
-  }
-  .btnStyle:hover{
-    transform: scale(1.1);
-    background-color:rgba(255, 255, 255, 0.8);
-    color: rgba(0, 208, 255, 0.9);
-  }
-</style>
 <body>
-  <main>
-      <a href="./Hindi2EnglishConvertor V2.html" class="btnStyle">Open Transliteration Potral</a>
-  </main>
+    <div id="notification" class="notification"></div>
+
+    <div id="container" class="container">
+        <header class="header">
+            <h1>English to Hindi Transliteration</h1>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="font-size-range">Font Size:</label>
+                    <input type="range" min="12" max="32" value="16" name="FontSize" id="font-size-range" />
+                </div>
+                <div class="control-group">
+                    <label>Auto-save new words?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="no" name="saveJSON" value="0" checked />
+                        <label for="no">No</label>
+                        <input type="radio" id="yes" name="saveJSON" value="1" />
+                        <label for="yes">Yes</label>
+                        <input type="radio" name="saveJSON" id="saveWithCount" value="2">
+                        <label for="saveWithCount">with Freq</label>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <button id="saveJSONBtn">Save New Words</button>
+                    <button id="ReadJSONBtn">View New Words</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="textarea-container">
+                <div class="actions">
+                    <button id="pasteBtn">Paste</button>
+                    <label for="OpenTextFileBtn" class="file-label">Open File</label>
+					<input type="file" name="OpenTextFileBtn" id="OpenTextFileBtn">
+                    <button id="saveInputTextBtn">Save</button>
+                    <button id="PublishInputTextBtn">Read Mode</button>
+                </div>
+                <textarea id="inputTextBox" placeholder="Enter text here..."></textarea>
+            </div>
+
+            <div class="converter-controls">
+                <button id="convertBtn">Convert &rarr;</button>
+                <div id="display" class="stats">
+					<div>
+						<label for="total_words">Words:</label>
+						<input type="text" name="total_words" id="total_words" value="0" disabled>
+					</div>
+					<div>
+						<label for="not_found_words">Not Found:</label>
+						<input type="text" name="not_found_words" id="not_found_words" value="0" disabled>
+					</div>
+					<div>
+						<label for="con_per">Converted:</label>
+						<input type="text" name="con_per" id="con_per" value="0%" disabled>
+					</div>
+			    </div>
+            </div>
+
+            <div class="textarea-container">
+                 <div class="actions">
+                    <button id="copyBtn">Copy</button>
+                    <button id="saveOutputTextBtn">Save</button>
+                    <button id="PublishOutputTextBtn">Read Mode</button>
+                </div>
+                <textarea id="outputTextBox" placeholder="Output will appear here..." readonly></textarea>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; Developed by Rajaanha</p>
+        </footer>
+    </div>
+
+    <script type="module" src="./js/app/main.js" defer></script>
 </body>
 </html>
