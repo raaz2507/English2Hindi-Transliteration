@@ -1,4 +1,6 @@
 @import url("general.css");
+
+
 @font-face {
 	font-family: ComicReal;
 	src: url("./../font/ComicReal-LVGZn.otf");
@@ -10,6 +12,7 @@
 @font-face {
 	font-family: kalam;
 	src: url("./../font/Kalam-Regular.ttf");
+
 }
 
 body {
@@ -19,9 +22,7 @@ body {
 	/* background-size: cover; */
 	background-position: center;
 }
-* {
-	font-family: kalam, DevLys, ComicReal;
-}
+/* * {font-family: kalam, DevLys, ComicReal;} */
 .controls{
 	position: fixed;
 	bottom: 3rem;
@@ -84,8 +85,10 @@ body {
 .btn {
 	user-select: none;
 	/* width:4rem; */
-	padding: 7px;
-	aspect-ratio: 1;
+	padding: 0px;
+	width:4rem;
+	height: 4rem;
+	/* aspect-ratio: 1; */
 	background-color: rgba(137, 43, 226, 0.6);
 	border-radius: 50%;
 	border: 1px solid rgba(255, 255, 255, 0.908);
