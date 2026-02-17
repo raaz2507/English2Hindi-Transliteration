@@ -304,7 +304,7 @@ class TransliterationEngine{
 		this.totalWordArr=wordArr;
 		
 		// console.log(totalWordArr);
-		let outputArr = this.#tranText(wordArr);
+		let outputArr = this.#transText(wordArr);
 		// console.log(outputArr);
 		let outputStr = this.#Arry2StringForOutput(outputArr);
 		// console.log(outputStr);
@@ -312,6 +312,12 @@ class TransliterationEngine{
 	}
 
 	#StringToArre(inputText){
+		let wordsArr = inputText.match(/[\p{L}\p{M}_]+|\d+|\n|\t|[^\p{L}\p{M}\d\s]/gu);;
+		console.log(wordsArr);
+		return wordsArr;
+	}
+
+	#StringToArre_old(inputText){
 		let arr = [];
 		let word = "";
 		
@@ -345,19 +351,20 @@ class TransliterationEngine{
 			return (desimalvalue>=2305 && desimalvalue<=2416); //devnagri(hindi) 2305-2416
 		}
 	}
-		
-	#tranText(wordArr) {
-		const dic = Dictionary;
+
+	#transText(wordArr) {
+		const dic = Dictionary; //its importing form Hindi2English.js file 
 		let Lword;
-		let outputArr = [];
-		let wordFound = false;
-		let notFoundWordArr=[];
+		const outputArr = [];
+		const notFoundWordArr=[];
+		let wordFound = false; //flag value set 
+
 		//Word arre ke each word ko access karega
 		wordArr.forEach((word) => {
 			wordFound = false;
 			//check karega ki spaical char hai ya nahi
-			let specialCharFleg=this.#isSpecialChar(word);
-			if (!specialCharFleg) {
+			let engWordFlag =this.#isEnglishWord(word);
+			if (engWordFlag) {
 				Lword = word.toLowerCase();
 				//Dic ke sub dic ko access karega
 				for (let subDis in dic) {
@@ -373,22 +380,70 @@ class TransliterationEngine{
 			// agar dic me word nahi mila to notFoundWord Aree me word ko push kar dega.
 			if (!wordFound) {
 				outputArr.push(word);
-				if(!specialCharFleg){
+				if(engWordFlag ){
 					notFoundWordArr.push(word);
 				}
 			}
 		});
-		this.notFoundWords= notFoundWordArr;
+		this.notFoundWords = notFoundWordArr;
+		console.log(this.notFoundWords);
 		return outputArr;
 	}
 	
 	#isSpecialChar(word) {
-		const specialCharRegex =
-			/[.,?!'\-:;"@#$%^&*()_+=\[\]{}<>\\/|0-9]|\n|\t/g;
-		return word.length === 1 && specialCharRegex.test(word);
+		// const specialCharRegex =/[.,?!'\-:;"@#$%^&*()_+=\[\]{}<>\\/|0-9]|\n|\t/g;
+		return /^[^\p{L}\p{M}\p{N}\s]$/u.test(word) && ( !this.#isEmoji(word) || this.#isNumber(word));
 	}
-	
-	#Arry2StringForOutput(outputArr) {
+	#isNumber(word) {
+		return /^\p{N}+$/u.test(word);
+	}
+	#isEmoji(word) {
+		return /^\p{Extended_Pictographic}$/u.test(word);
+	}
+	#isEnglishWord(word) {
+		return /^[a-zA-Z]+$/.test(word);
+	}
+	#isHindiWord(word) {
+		const hindiRegex = /^[\p{Script=Devanagari}\p{M}]+$/u;
+		return hindiRegex.test(word);
+	}
+	#Arry2StringForOutput(outputArr){
+
+		const noSpaceBefore = /^[,!.?:;]$/;     // इनसे पहले space नहीं
+		const noSpaceAfter  = /^[@#₹/\\-]$/;    // इनके बाद space नहीं
+
+		let outputStr = "";
+
+		outputArr.forEach((word, index) => {
+
+			if (word === "\n" || word === "\t") {
+				outputStr += word;
+				return;
+			}
+
+			let prevWord = outputArr[index - 1];
+
+			if (!prevWord) {
+				outputStr += word;
+				return;
+			}
+
+			if (noSpaceBefore.test(word)) {
+				outputStr = outputStr.trimEnd() + word;
+			}
+			else if (noSpaceAfter.test(prevWord)) {
+				outputStr += word;
+			}
+			else {
+				outputStr += " " + word;
+			}
+
+		});
+
+		return outputStr;
+	}
+
+	#Arry2StringForOutput_old(outputArr) {
 		let outputStr = "";
 		outputArr.forEach((word) => {
 			if (this.#isSpecialChar(word)) {
