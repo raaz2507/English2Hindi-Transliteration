@@ -9,78 +9,78 @@
 </head>
 
 <body>
-	<div id="contener">
-		<header>
-			<div id="heading">
-				<p><a href="./index.html">English 2 Hindi Transliteration</a></p>
+	<header>
+		<h1 class="site-title">
+			<p><a href="./index.html">English2Hindi Transliteration</a></p>
+		</h1>
+		<div id="setting">
+			<div class="font_size_area">
+				<label for="Font-Size" id="font-sizeLabel">Font-Size</label>
+				<input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" />
+				<output id="fontSizeDisplay">16</output>
 			</div>
-				<div id="setting">
-					<div>
-						<label for="Font-Size" id="font-sizeLabel">Font-Size</label><br />
-						<input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" />
-						<br />
-					</div>
-					<div>
-						<label for="file" >Do u want Automatically save non-find words in json file ?</label>
-							<br>
-								<label for="yes">Yes</label>
-								<input type="radio" id='yes' name="saveJSON" value="1" />
-									&nbsp;&nbsp;
-								<label for="no">No</label>
-								<input type="radio" id="no" name="saveJSON" value="0" checked /><br>
-								<label for="saveWithCount">Save with Frequency</label>
-								<input type="radio" name="saveJSON" id="saveWithCount" value="2">
-					
-							<div>
-								<button id="ReadJSONBtn">Read JSON Mode</button>
-								<button id="saveJSONBtn">save JSON Files</button>
-							</div>
-					</div>
-				</div>
-				<div id="display">
-					<div>
-						<label for="total_words">Total Words:</label>
-						<input type="text" name="total_words" id="total_words" placeholder="0" disabled><br>
-					</div>
-					<div>
-						<label for="not_found_words">Not Found words:</label>
-						<input type="text" name="not_found_words" placeholder="0" id="not_found_words" disabled><br>
-					</div>
-					<div>
-						<label for="con_per">Converstion %:</label>
-						<input type="text" name="con_per" placeholder="0" id="con_per" disabled>
-					</div>
+			<label >Do u want Automatically save non-find words in json file ?</label>
+			<div class="optionsSel">
+				<label for="yes">Yes</label>
+				<input type="radio" id='yes' name="saveJSON" value="1" />
+				<label for="no">No</label>
+				<input type="radio" id="no" name="saveJSON" value="0" checked />
+				<label for="saveWithCount">Save with Frequency</label>
+				<input type="radio" name="saveJSON" id="saveWithCount" value="2">
 			</div>
-		</header>
-		<aside>
-			<button id="convertBtn">Convert</button>
-		</aside>
-		<main>
-			<div class="input-area text-area">
-				<div class="action-btn">
-					<button id="pasteBtn">paste</button>
-					
-					<!-- <button id="OpenTextFileBtn">Open Text File</button> -->
-					<button id="saveInputTextBtn">Save Text File</button>
-					<button id="PublishInputTextBtn">Reading Mode</button>
-					<label for="OpenTextFileBtn" class="openFileLabel">Open File</label>
-					<input type="file" name="OpenTextFileBtn" id="OpenTextFileBtn" style="margin-top:2%; font-size: 1em;">
-				</div>
-				<textarea name="input" id="inputTextBox" placeholder="Enter or Copy/Paste Your text here."></textarea>
+			<div>
+				<button id="ReadJSONBtn">Read JSON Mode</button>
+				<button id="saveJSONBtn">Save JSON Files</button>
 			</div>
-			<div class="output-area text-area">
-				<div class="action-btn">
-					<button id="copyBtn">copy</button>
-					<button id="saveOutputTextBtn">save as txt Files</button>
-					<button id="PublishOutputTextBtn">Reading Mode</button>
-				</div>
-				<textarea name="output" id="outputTextBox" placeholder="Your Output" readonly></textarea>
+		</div>
+		<div id="display">
+			<div>
+				<label for="total_words">Total Words:&ensp;</label>
+				<input type="text" name="total_words" id="total_words" placeholder="0" disabled>
 			</div>
-		</main>
-		
-		<footer><p>&copy; Dovelop by Rajaanha</p></footer>
+			<div>
+				<label for="not_found_words">Not Found words:&ensp;</label>
+				<input type="text" name="not_found_words" placeholder="0" id="not_found_words" disabled>
+			</div>
+			<div>
+				<label for="con_per">Converstion %:&ensp;</label>
+				<input type="text" name="con_per" placeholder="0" id="con_per" disabled>
+			</div>
+		</div>
+	</header>
+	
+	<main>
+		<div class="input-area text-area">
+			<div class="action-btn">
+				<button id="pasteBtn">Paste</button>
+				
+				<!-- <button id="OpenTextFileBtn">Open Text File</button> -->
+				<button id="saveInputTextBtn">Save Text File</button>
+				<button id="PublishInputTextBtn">Reading Mode</button>
+				<span>
+					<label for="OpenTextFileBtn" class="file-btn btn"> 📂 Open File</label>
+					<input type="file" name="OpenTextFileBtn" id="OpenTextFileBtn" hidden>
+				</span>
+				
+			</div>
+			<textarea name="input" id="inputTextBox" placeholder="Enter or Copy/Paste Your text here."></textarea>
+		</div>
+		<div class="output-area text-area">
+			<div class="action-btn">
+				<button id="copyBtn">Copy</button>
+				<button id="saveOutputTextBtn">Save as *.txt File</button>
+				<button id="PublishOutputTextBtn">Reading Mode</button>
+			</div>
+			<textarea name="output" id="outputTextBox" placeholder="Your Output" readonly></textarea>
+		</div>
+	</main>
+	
+	<footer>
+		<p>&copy; Dovelop by Rajaanha</p>
+	</footer>
+	<div class="floatBtnContainer">
+		<button id="convertBtn">📜 Convert</button>
 	</div>
-
 <script type="module" src="./js/Eng2Hin_Con_v2byCalss.js" defer></script>
 </body>
 </html>

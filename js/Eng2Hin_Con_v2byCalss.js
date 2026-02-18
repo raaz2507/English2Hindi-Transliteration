@@ -178,6 +178,7 @@ class UIElements{
 		const elemtsMap={
 			//setting btn
 			fontSizeRange:'font-size-range',
+			fontSizeDisplay: 'fontSizeDisplay',
 
 			//JSON related Btn
 			ReadJSONBtn:'ReadJSONBtn',
@@ -230,8 +231,10 @@ class TranslationDashboard{
 	}
 
 	setTextBoxFontSize(fontSizeRanger=this.#elmt.fontSizeRange, inputTextBox=this.#elmt.inputTextBox, outputTextBox=this.#elmt.outputTextBox){
+		const {fontSizeDisplay}=this.#elmt;
 		inputTextBox.style.fontSize = fontSizeRanger.value + "px";
 		outputTextBox.style.fontSize = fontSizeRanger.value + "px";
+		fontSizeDisplay.value = fontSizeRanger.value; //font size display
 	}
 
 	//copy and paset methods
@@ -392,7 +395,7 @@ class TransliterationEngine{
 	
 	#isSpecialChar(word) {
 		// const specialCharRegex =/[.,?!'\-:;"@#$%^&*()_+=\[\]{}<>\\/|0-9]|\n|\t/g;
-		return /^[^\p{L}\p{M}\p{N}\s]$/u.test(word) && ( !this.#isEmoji(word) || this.#isNumber(word));
+		return /^[^\p{L}\p{M}\p{N}\s]$/u.test(word) && !( this.#isEmoji(word) || this.#isNumber(word));
 	}
 	#isNumber(word) {
 		return /^\p{N}+$/u.test(word);
