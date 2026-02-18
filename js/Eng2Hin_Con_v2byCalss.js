@@ -82,7 +82,7 @@ function setEventsOnBtn(elmt, Dashbord, tran_Engine, jsonFile) {
 	};
 
 	// 🔘 Event delegation using actionMap
-	container.addEventListener("click", (e) => {
+	document.body.addEventListener("click", (e) => {
 		const handler = actionMap[e.target.id];
 		if (handler) handler(); // Run mapped function if exists
 	});

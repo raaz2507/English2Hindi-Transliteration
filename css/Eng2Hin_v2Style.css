@@ -88,21 +88,20 @@ header #setting button{
 header #display {
   padding: 3px 5px;
   background-color: rgb(255, 255, 255, 0.3);
+  font-size: 1.3rem;
 }
 header #display input[type="text"]{
   text-align: center;
 }
-header #display #total_words{
-  color: rgb(138, 43, 226)
+body header #display div input[type="text"]{
+  width: 80px;
 }
+header #display #total_words{color: rgb(138, 43, 226);}
 
-header #display #not_found_words{
-  color: rgb(255, 0, 0);
-}
+header #display #not_found_words{color: rgb(255, 0, 0);}
 
-header #display #con_per{
-  color: rgb(0, 128, 0);
-}
+header #display #con_per{color: rgb(0, 128, 0);}
+
 main{
   padding: 5px 10px;
   margin:5px;
@@ -118,8 +117,8 @@ main .text-area textarea{
   border-radius: 10px;
   box-shadow: inset 1px 1px 10px -3px black;
   background-color: var(--TextAreabackGround);
+  min-height: 200px;
 }
-
 /* main *{border: 1px solid red;} */
 main .text-area .action-btn{
   padding: 10px 5px;
@@ -156,38 +155,31 @@ footer{
   cursor: pointer;
   transition: 0.15s ease;
   box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  color: white;
 }
 
 /* Paste */
 #pasteBtn {
   background-color: #3498db;
-  color: white;
+  
 }
 
 /* Save Input */
-#saveInputTextBtn {
+#saveInputTextBtn, #saveOutputTextBtn{
   background-color: #27ae60;
-  color: white;
 }
 
 /* Reading Mode */
 #PublishInputTextBtn,
 #PublishOutputTextBtn {
   background-color: #f39c12;
-  color: white;
 }
 
 /* Copy */
 #copyBtn {
   background-color: #8e44ad;
-  color: white;
 }
 
-/* Save Output */
-#saveOutputTextBtn {
-  background-color: #e74c3c;
-  color: white;
-}
 
 /* Hover effect */
 .action-btn button:hover,
@@ -303,6 +295,7 @@ body header #display{
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  row-gap: 7px;
 }
 body header #display div {
   display: flex;
@@ -321,6 +314,7 @@ body main .text-area{
       display: flex;
       flex-direction: column;
 }
+
 body main .text-area .action-btn{
   display: flex;
   flex-wrap: wrap;
@@ -348,8 +342,8 @@ body main .text-area textarea{
     row-gap: 5px;
   }
   body main .text-area textarea{
-    flex-basis: 200px;
-  }
+    /* flex-basis: 200px; */
+}
   #convertBtn{
     bottom: 1rem;
     right: 1rem;
