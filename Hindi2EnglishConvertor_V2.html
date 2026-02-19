@@ -21,12 +21,22 @@
 			</div>
 			<label >Do u want Automatically save non-find words in json file ?</label>
 			<div class="optionsSel">
-				<label for="yes">Yes</label>
-				<input type="radio" id='yes' name="saveJSON" value="1" />
-				<label for="no">No</label>
-				<input type="radio" id="no" name="saveJSON" value="0" checked />
-				<label for="saveWithCount">Save with Frequency</label>
-				<input type="radio" name="saveJSON" id="saveWithCount" value="2">
+				<div>
+					<input type="radio" id="no" name="saveJSON" value="0" checked />
+					<label for="no">No</label>
+				</div>
+				<div>
+					<input type="radio" id='yes' name="saveJSON" value="1" />
+					<label for="yes" title="">Without Word Count &#9432;</label>
+				</div>
+				
+				<div>
+					<input type="radio" name="saveJSON" id="saveWithCount" value="2">
+					<label for="saveWithCount" 
+					   title="Dictionary of words with their count showing how many times they appear in a string.">
+					   With Word Count &#9432;</label>
+				</div>
+				
 			</div>
 			<div>
 				<button id="ReadJSONBtn">🛠️ Read JSON Mode</button>
@@ -76,10 +86,10 @@
 	</main>
 	
 	<footer>
-		<p>&copy; Dovelop by Rajaanha</p>
+		<p>&#9819; Dovelop by Rajaanha</p>
 	</footer>
 	<div class="floatBtnContainer">
-		<button id="convertBtn">📜 Convert</button>
+		<button id="convertBtn">📜 C&#9775;nvert</button>
 	</div>
 <script type="module" src="./js/Eng2Hin_Con_v2byCalss.js" defer></script>
 </body>

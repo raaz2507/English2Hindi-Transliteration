@@ -74,9 +74,7 @@ header #setting{
   background-color: rgb(255, 255, 255, 0.3);
   font-size: 1.1rem;
 }
-header #setting [type="radio"]{
-  margin-right: 1rem;
-}
+
 header #setting button{
   margin: auto 5px;
   padding: 5px 10px;
@@ -84,6 +82,7 @@ header #setting button{
 }
 header #setting button{
   background-color: rgba(135, 207, 235, 0.877);
+  color: rgb(120, 68, 0);
 }
 header #display {
   padding: 3px 5px;
@@ -196,9 +195,6 @@ footer{
 
 /* button styling end */
 
-
-
-
 /* file open btn custmize start */
 main .text-area .action-btn .file-btn {
   display: inline-block;
@@ -224,10 +220,16 @@ main .text-area .action-btn .file-btn:active {
 }
 .floatBtnContainer #convertBtn{
   font-size: 1.3rem;
-  padding: 2px 6px;
+  font-weight: 900;
+  padding: 8px 10px;
   border-radius: 8px;
   background-color: rgba(254, 188, 20, 0.4);
   color: rgba(58, 43, 5, 0.993);
+  box-shadow: 2px 2px 13px -3px black;
+}
+.floatBtnContainer #convertBtn :active{
+  box-shadow: 2px 2px 8px -7px rgba(0, 0, 0, 0.243);
+  transform: scale(.7);
 }
 .floatBtnContainer #convertBtn {
   position: relative;
@@ -290,6 +292,14 @@ body header #setting .font_size_area{
   column-gap:10px;
   /* justify-content: space-evenly; */
   /* width: 100%; */
+}
+body header #setting .optionsSel{
+  display: flex;
+  flex-wrap: wrap;
+  column-gap:2rem;
+  row-gap: 5px;
+  align-items: center;
+  justify-content: center;
 }
 body header #display{
   display: flex;
