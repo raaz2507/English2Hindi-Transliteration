@@ -58,7 +58,7 @@ body {
 }
 
 .menu div {
-	width: max-content;
+	max-width: 80vw;
 	text-align: center;
 	border: 1px solid rgb(255, 255, 255);
 	border-radius: 10px;
@@ -70,7 +70,7 @@ body {
 	margin: 8px 12px;
 }
 .menu div ul {
-	width: max-content;
+	width: 100%;
 	list-style: none;
 }
 .menu div ul li {
@@ -102,7 +102,7 @@ line-height: 4rem; */
 }
 .btn:hover {
 	background-color: rgba(137, 43, 226, 0.9);
-	transform: scale(1.2);
+	transform: scale(0.98);
 }
 main {
 	width: 100%;
@@ -164,10 +164,11 @@ main {
 		opacity: 0;
 	}
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (orientation: portrait) {
 	.menu {
 		flex-direction: column;
 		width: auto;
+		right: 3rem;
 	}
 
 	.menu div {
@@ -177,5 +178,14 @@ main {
 	.menu div ul {
 		justify-content: center;
 		flex-wrap: wrap;
+	}
+	.controls{
+		bottom: 1.3rem;
+		right: 1.3rem;
+	}
+	.btn{
+		font-size: 2rem;
+		width:3rem;
+		height: 3rem;
 	}
 }

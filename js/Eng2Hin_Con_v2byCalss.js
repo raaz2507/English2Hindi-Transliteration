@@ -80,7 +80,7 @@ class TranslationDashboard{
 
 	#setEventsOnBtn(){
 		const { inputTextBox, outputTextBox, fontSizeRange , OpenTextFileBtn } = this.#elemts;
-		// this.#tran_Engine; this.#jsonFile;
+
 		// 🎯 Font size adjustment
 		fontSizeRange.addEventListener("input", ()=>this.#setTextBoxFontSize());
 
@@ -118,13 +118,13 @@ class TranslationDashboard{
 				const JSONWithCountFlag = saveFileSetWithCount();
 
 				if (this.#tran_Engine.notFoundWords.length > 0 && (saveJSONFlag || JSONWithCountFlag)) {
-					jsonFile.saveNotFoundWordAsJSON(this.#tran_Engine.notFoundWords, JSONWithCountFlag);
+					this.#jsonFile.saveNotFoundWordAsJSON(this.#tran_Engine.notFoundWords, JSONWithCountFlag);
 				}
 			},
 
 			ReadJSONBtn: () => {
 				if (this.#tran_Engine.notFoundWords.length) {
-					const jsonData = jsonFile.convertArre2JSON(
+					const jsonData = this.#jsonFile.convertArre2JSON(
 						this.#tran_Engine.notFoundWords,
 						saveFileSetWithCount()
 					);
@@ -134,7 +134,7 @@ class TranslationDashboard{
 
 			saveJSONBtn: () => {
 				if (this.#tran_Engine.notFoundWords.length > 0) {
-					jsonFile.saveNotFoundWordAsJSON(
+					this.#jsonFile.saveNotFoundWordAsJSON(
 						this.#tran_Engine.notFoundWords,
 						saveFileSetWithCount()
 					);

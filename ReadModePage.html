@@ -11,104 +11,131 @@
 	<div class="controls">
 		<div class="wapper">
     
-      <div class="menu" id="menu">
-        <div>
-          <label for="Font-Size" class="labels">Font-Size</label>
-          <br>
-          <input type="range" min="10" max="50" value="16" name="Font-Size" id="font-size-range" /><br />
-        </div>
-        <div class="page-color">
-          <p class="labels">Page Color</p>
-          <ul id="PageColorList">
-            <li> <div style="background-color: rgba(255, 000, 000, 0.9);"></div></li>
-            <li> <div style="background-color: rgba(218, 165, 032, 0.9);"></div></li>
-            <li> <div style="background-color: rgba(000, 255, 136, 0.9);"></div></li>
-            <li> <div style="background-color: rgba(255, 192, 203, 0.9);"></div></li>
-            <li> <div style="background-color: rgba(000, 000, 000, 0.9);"></div></li>
-            <li> <div style="background-color: rgba(128, 128, 128, 0.9);"></div></li>
-            <li> <div style="background-color: rgba(245, 245, 245, 0.9);"></div></li>
-          </ul>
-        </div>
-        <div class="text-color">
-          <p class="labels">Text Color</p>
-          <ul id="fontColorList">
-            <li> <div style="background-color: rgba(255, 000, 000, 1);"></div></li>
-            <li> <div style="background-color: rgba(000, 255, 136, 1);"></div></li>
-            <li> <div style="background-color: rgba(218, 165, 032, 1);"></div></li>
-            <li> <div style="background-color: rgba(255, 192, 203, 1);"></div></li>
-            <li> <div style="background-color: rgba(000, 000, 000, 1);"></div></li>
-            <li> <div style="background-color: rgba(128, 128, 128, 1);"></div></li>
-            <li> <div style="background-color: rgba(245, 245, 245, 1);"></div></li>
-            </ul>
-        </div>
-      </div>
-      <button class="btn" id="btn">+</button>
-	  </div>
+			<div class="menu" id="menu">
+				<div>
+					<label for="Font-Size" class="labels">Font-Size (<output id="font_size_dis"></output>)</label>
+					<input type="range" min="10" max="50" value="16" name="Font-Size" id="fontSizeRange" /><br />
+					
+				</div>
+				<div class="page-color">
+					<h4 class="labels">Page Color</h4>
+					<ul id="PageColorList">
+						<li> <div style="background-color: rgba(255, 000, 000, 0.9);"></div></li>
+						<li> <div style="background-color: rgba(218, 165, 032, 0.9);"></div></li>
+						<li> <div style="background-color: rgba(000, 255, 136, 0.9);"></div></li>
+						<li> <div style="background-color: rgba(255, 192, 203, 0.9);"></div></li>
+						<li> <div style="background-color: rgba(000, 000, 000, 0.9);"></div></li>
+						<li> <div style="background-color: rgba(128, 128, 128, 0.9);"></div></li>
+						<li> <div style="background-color: rgba(245, 245, 245, 0.9);"></div></li>
+					</ul>
+				</div>
+				<div class="text-color">
+					<h4 class="labels">Text Color</h4>
+					<ul id="fontColorList">
+						<li> <div style="background-color: rgba(255, 000, 000, 1);"></div></li>
+						<li> <div style="background-color: rgba(000, 255, 136, 1);"></div></li>
+						<li> <div style="background-color: rgba(218, 165, 032, 1);"></div></li>
+						<li> <div style="background-color: rgba(255, 192, 203, 1);"></div></li>
+						<li> <div style="background-color: rgba(000, 000, 000, 1);"></div></li>
+						<li> <div style="background-color: rgba(128, 128, 128, 1);"></div></li>
+						<li> <div style="background-color: rgba(245, 245, 245, 1);"></div></li>
+					</ul>
+				</div>
+			</div>
+			<button class="btn" id="btn" >+</button>
+			</div>
+		</div>
 	</div>
-	
 	<main>
 		<p id="page">&nbsp;</p>
 	</main>
-<script>
-	const btn=document.getElementById("btn");
-	const menu=document.getElementById('menu');
 	
-	btn.addEventListener('click', animateMenu);
-	
-	(function setTextToPage(){
-			let page=document.getElementById("page");
-			page.innerText=	localStorage.getItem("readingText"); // localStorage से text लो
-			localStorage.setItem("readingText", " ");
-	})();
+	<script>
+		document.addEventListener( "DOMContentLoaded", (event)=>{
+			new Deshbord();
+		});
 
-	let isOpen = false;
-	function animateMenu(){
-		if (!isOpen) {
-			menu.classList.remove('hide-anim');
-			menu.classList.add('show');
-			isOpen = true;
-		} else {
-			menu.classList.remove('show');
-			menu.classList.add('hide-anim');
+		class Deshbord{
+			#elemts={};
+			constructor(){
+				this.#getElemts();
+				this.#setEvents();
+				this.#setTextToPage();
+				this.#setFontSize();
+			}
+			#getElemts(){
+				const elemtsMap={
+					btn : {id: 'btn'},
+					menu: {id: 'menu'},
+					page: {id: 'page'},
+					font_size_dis : {id : 'font_size_dis'},
+					fontSizeRange : {id: 'fontSizeRange'},
+				};
+				for (const [key, value] of Object.entries(elemtsMap)){
+					if(value['id']){
+						this.#elemts[key]= document.getElementById(value['id']);
+					}
+				}
+			}
+			#setEvents(){
+				const {page, btn, menu, fontSizeRange} =this.#elemts;
+				btn.addEventListener('click', ()=> animateMenu() );
 
-			// Animation ke baad menu hide karna
-			setTimeout(() => {
-				menu.style.display = 'none';
-			}, 400); // Match animation duration
-			isOpen = false;
-		}
+				let isOpen = false;
+				function animateMenu(){
+					if (!isOpen) {
+						menu.classList.remove('hide-anim');
+						menu.classList.add('show');
+						isOpen = true;
+					} else {
+						menu.classList.remove('show');
+						menu.classList.add('hide-anim');
 
-		// Jab open ho, toh display flex set karo
-		if (menu.style.display === 'none' || menu.style.display === '') {
-			menu.style.display = 'flex';
-		}
-	}
-	document.getElementById("font-size-range").addEventListener("input", (event) => {
-    let value =event.target.value;
-    page.style.fontSize = `${value}px`;
-    page.style.lineHeight = `${value*1.3}px`;
+						// Animation ke baad menu hide karna
+						setTimeout(() => {
+							menu.style.display = 'none';
+						}, 400); // Match animation duration
+						isOpen = false;
+					}
 
-	});
-	document.getElementById("menu").addEventListener("click",()=> changeColor(event));
-		
-	function changeColor(event){
-		
-    // console.log(event.target.tagName);
-		// agar click kisi LI par hua hai
-		if (event.target.tagName === "DIV") {
-      
-			const clickedColor = event.target.style.backgroundColor;
+					// Jab open ho, toh display flex set karo
+					if (menu.style.display === 'none' || menu.style.display === '') {
+						menu.style.display = 'flex';
+					}
+				}
+				menu.addEventListener("click",()=> changeColor(event));
+			
+				function changeColor(event){
+					// agar click kisi LI par hua hai
+					if (event.target.tagName === "DIV") {
+				
+						const clickedColor = event.target.style.backgroundColor;
 
-			// check karo ki wo kis list ka child hai
-			const parentUlId = event.target.parentElement.parentElement.id;
-			// console.log(parentUlId);
-			if (parentUlId === "PageColorList") {
-				page.style.backgroundColor = clickedColor;
-			} else if (parentUlId === "fontColorList") {
-				page.style.color = clickedColor;
+						// check karo ki wo kis list ka child hai
+						const parentUlId = event.target.parentElement.parentElement.id;
+						// console.log(parentUlId);
+						if (parentUlId === "PageColorList") {
+							page.style.backgroundColor = clickedColor;
+						} else if (parentUlId === "fontColorList") {
+							page.style.color = clickedColor;
+						}
+					}
+				}
+				fontSizeRange.addEventListener("input", this.#setFontSize.bind(this));
+			}
+			#setFontSize(){
+				const {page, fontSizeRange, font_size_dis} = this.#elemts;
+				const value = fontSizeRange.value;
+				page.style.fontSize = `${value}px`;
+				page.style.lineHeight = `${value*1.3}px`;
+				font_size_dis.value = value; 
+			}
+			#setTextToPage(){
+				const {page}=this.#elemts;
+				page.innerText=	localStorage.getItem("readingText"); // localStorage से text लो
+				//localStorage.setItem("readingText", " "); //clean localStorage
 			}
 		}
-	}
-</script>
+	</script>
 </body>
 </html>
