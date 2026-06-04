@@ -1,4 +1,4 @@
-@import url('./general.css');
+@import url('./base.css');
 
 @font-face{
   font-family: myFont;
@@ -141,6 +141,44 @@ footer{
   margin: 5px 5px 10px;
   padding: 5px 15px;
   text-align: right;
+}
+
+html[data-theme="dark"] body::before{
+  background: var(--theme-overlay-bg);
+}
+html[data-theme="dark"] header{
+  background-color: var(--theme-panel-strong-bg);
+}
+html[data-theme="dark"] header .site-title a{
+  color: var(--theme-page-text);
+}
+html[data-theme="dark"] header #setting,
+html[data-theme="dark"] header #display,
+html[data-theme="dark"] main{
+  background-color: var(--theme-panel-bg);
+}
+html[data-theme="dark"] header #setting button{
+  background-color: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  border: 1px solid var(--theme-border);
+}
+html[data-theme="dark"] header #display input[type="text"],
+html[data-theme="dark"] main .text-area textarea{
+  background-color: var(--theme-editor-bg);
+  color: var(--theme-editor-text);
+  border-color: var(--theme-border);
+}
+html[data-theme="dark"] main .text-area .action-btn{
+  background-color: var(--theme-panel-strong-bg);
+}
+html[data-theme="dark"] main .input-area{
+  background-color: var(--theme-input-panel-bg);
+}
+html[data-theme="dark"] main .output-area{
+  background-color: var(--theme-output-panel-bg);
+}
+html[data-theme="dark"] footer{
+  background-color: var(--theme-footer-bg);
 }
 
 /* button styling start */

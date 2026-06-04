@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	const myDeshbord = new Deshbord();
 	setEventOnElements(myDeshbord, JsonMagicSorter, browserDic);
 });
-function setEventOnElementsNew(myDeshbord, myJson){
+async function setEventOnElementsNew(myDeshbord, myJson){
 	const {SortKeyAscBtn, SortKeyDescBtn, SortValueAscBtn, SortValueDescBtn, swapKey2ValueBtn}=myDeshbord;
 	const {openFileBtn, copyInputBtn, PasteInputBtn, exportInputJson2FileBtn}=myDeshbord; 
 	const	{copyOutputBtn, exportOutputJson2FileBtn}=myDeshbord;
-	const {PreTextArea, sortTextArea}=myDeshbord;
+	const {PreTextArea, processedTextArea}=myDeshbord;
 	
 	let preJsonData={};
 	let outputJSONData={};
@@ -43,14 +43,28 @@ function setEventOnElementsNew(myDeshbord, myJson){
 }
 async function setEventOnElements(myDeshbord, myJson, browserDic){
 	const {SortKeyAscBtn, SortKeyDescBtn, SortValueAscBtn, SortValueDescBtn, swapKey2ValueBtn}=myDeshbord;
-	const {openFileBtn, copyInputBtn, PasteInputBtn, exportInputJson2FileBtn}=myDeshbord; 
-	const	{copyOutputBtn, exportOutputJson2FileBtn}=myDeshbord;
-	const {aiTranslateBtn, downloadAiDicBtn, clearAiDicBtn}=myDeshbord;
-	const {PreTextArea, sortTextArea}=myDeshbord;
+	const {openFileBtn, copyInputBtn, PasteInputBtn, exportInputJson2FileBtn, clearInputDbBtn}=myDeshbord;
+	const	{copyOutputBtn, exportOutputJson2FileBtn, clearProcessedDbBtn}=myDeshbord;
+	const {aiTranslateBtn, stopAiTranslateBtn, aiTranslateProgress, aiTranslatePercent, downloadAiDicBtn, clearAiDicBtn}=myDeshbord;
+	const {PreTextArea, processedTextArea}=myDeshbord;
 
 	
 	let preJsonData={};
 	let outputJSONData={};
+	let aiTranslationController = null;
+
+	const savedInputDictionary = await browserDic.getInputDictionary();
+	const savedProcessedDictionary = await browserDic.getProcessedDictionary();
+
+	if (Object.keys(savedInputDictionary).length) {
+		preJsonData = savedInputDictionary;
+		updateInputTextArea();
+	}
+
+	if (Object.keys(savedProcessedDictionary).length) {
+		outputJSONData = savedProcessedDictionary;
+		updateOutputTextArea();
+	}
 	
 	(function getJsonFormLocalStorage(){
 		const jsonData= localStorage.getItem("JSON_Dic_Data");
@@ -62,10 +76,68 @@ async function setEventOnElements(myDeshbord, myJson, browserDic){
 		}
 	})();
 
+	if (Object.keys(preJsonData).length) {
+		await browserDic.saveInputDictionary(preJsonData);
+		await browserDic.addPendingWordsFromJSON(preJsonData);
+	}
+
+	const debounce = (callback, delay = 500) => {
+		let timeoutId;
+		return (...args) => {
+			clearTimeout(timeoutId);
+			timeoutId = setTimeout(() => callback(...args), delay);
+		};
+	};
+
+	const parseTextareaJSON = (textarea) => JSON.parse(textarea.value.trim() || "{}");
+
+	const saveInputFromTextareaNow = async (showAlert = false) => {
+		try {
+			preJsonData = parseTextareaJSON(PreTextArea);
+			await browserDic.saveInputDictionary(preJsonData);
+			await browserDic.addPendingWordsFromJSON(preJsonData);
+			return true;
+		} catch (error) {
+			if (showAlert) alert(`Input JSON is not valid: ${error.message}`);
+			return false;
+		}
+	};
+
+	const saveProcessedFromTextareaNow = async (showAlert = false) => {
+		try {
+			outputJSONData = parseTextareaJSON(processedTextArea);
+			await browserDic.saveProcessedDictionary(outputJSONData);
+			return true;
+		} catch (error) {
+			if (showAlert) alert(`Processed JSON is not valid: ${error.message}`);
+			return false;
+		}
+	};
+
+	const syncInputFromTextarea = debounce(async () => {
+		await saveInputFromTextareaNow();
+	});
+
+	const syncProcessedFromTextarea = debounce(async () => {
+		await saveProcessedFromTextareaNow();
+	});
+
+	const updateAIProgress = (current, total) => {
+		const percent = total ? Math.min(100, Math.round((current / total) * 100)) : 0;
+		aiTranslateProgress.value = percent;
+		aiTranslatePercent.textContent = `${percent}%`;
+	};
+
+	const setAITranslating = (isTranslating) => {
+		aiTranslateBtn.disabled = isTranslating;
+		stopAiTranslateBtn.disabled = !isTranslating;
+	};
+
 	function updateInputTextArea(){
 		if (preJsonData){
 			try{
 				PreTextArea.value = JSON.stringify(preJsonData, null , 1);
+				myDeshbord.updateLineNumbers(PreTextArea, myDeshbord.inputLineNumbers);
 			}catch(error){
 				alert(`Not Valid JSON Data ${error.message}`)
 			}
@@ -75,11 +147,21 @@ async function setEventOnElements(myDeshbord, myJson, browserDic){
 
 	function updateOutputTextArea(){
 		console.log(JSON.stringify(outputJSONData));
-		sortTextArea.value = JSON.stringify(outputJSONData, null, 1);
+		processedTextArea.value = JSON.stringify(outputJSONData, null, 1);
+		myDeshbord.updateLineNumbers(processedTextArea, myDeshbord.processedLineNumbers);
+		browserDic.saveProcessedDictionary(outputJSONData);
 	}
 	
 
 	//event on input-area json Data
+	PreTextArea.addEventListener("input", syncInputFromTextarea);
+	processedTextArea.addEventListener("input", syncProcessedFromTextarea);
+	PreTextArea.addEventListener("input", () => myDeshbord.updateLineNumbers(PreTextArea, myDeshbord.inputLineNumbers));
+	processedTextArea.addEventListener("input", () => myDeshbord.updateLineNumbers(processedTextArea, myDeshbord.processedLineNumbers));
+	PreTextArea.addEventListener("scroll", () => myDeshbord.syncLineNumberScroll(PreTextArea, myDeshbord.inputLineNumbers));
+	processedTextArea.addEventListener("scroll", () => myDeshbord.syncLineNumberScroll(processedTextArea, myDeshbord.processedLineNumbers));
+	myDeshbord.updateLineNumbers(PreTextArea, myDeshbord.inputLineNumbers);
+	myDeshbord.updateLineNumbers(processedTextArea, myDeshbord.processedLineNumbers);
 	
 	openFileBtn.addEventListener("change", (event) => {
 		//event for open file btn
@@ -92,44 +174,97 @@ async function setEventOnElements(myDeshbord, myJson, browserDic){
     const fr = new FileReader();
     fr.readAsText(file);
 
-    fr.addEventListener("load", () => {
+    fr.addEventListener("load", async () => {
         try {
             preJsonData = JSON.parse(fr.result);  // ✅ अब object मिलेगा
             updateInputTextArea();                // ✅ TextArea अपडेट करो
+            await browserDic.saveInputDictionary(preJsonData);
+            await browserDic.addPendingWordsFromJSON(preJsonData);
+			alert("JSON file data saved in browser IndexedDB.");
         } catch (error) {
             alert("Invalid JSON file: " + error.message);
         }
     });
 	});
 	
-	copyInputBtn.addEventListener('click', ()=>{
+	copyInputBtn.addEventListener('click', async ()=>{
+		if (!await saveInputFromTextareaNow(true)) return;
 		myDeshbord.copyText(JSON.stringify(preJsonData, null, 1));
 	});
 
-	PasteInputBtn.addEventListener('click', ()=>{
-		myDeshbord.pasteText(preJsonData);
+	PasteInputBtn.addEventListener('click', async ()=>{
+		try {
+			preJsonData = JSON.parse(await navigator.clipboard.readText());
+			updateInputTextArea();
+			await browserDic.saveInputDictionary(preJsonData);
+			await browserDic.addPendingWordsFromJSON(preJsonData);
+		} catch (error) {
+			alert(`Error to paste text ${error.message}`);
+		}
 		updateInputTextArea();
 	});
 
-	exportInputJson2FileBtn.addEventListener('click', ()=>{
+	exportInputJson2FileBtn.addEventListener('click', async ()=>{
+		if (!await saveInputFromTextareaNow(true)) return;
 		myDeshbord.export2JsonFile( JSON.stringify( preJsonData, null, 1));
 	});
 
+	clearInputDbBtn.addEventListener('click', async ()=>{
+		if (!confirm("Clear input JSON from IndexedDB?")) return;
+		await browserDic.clearInputDictionary();
+		preJsonData = {};
+		updateInputTextArea();
+		alert("Input JSON IndexedDB data cleared.");
+	});
+
 	//event on output-area
-	copyOutputBtn.addEventListener('click', ()=>{
+	copyOutputBtn.addEventListener('click', async ()=>{
+		if (!await saveProcessedFromTextareaNow(true)) return;
 		myDeshbord.copyText(JSON.stringify(outputJSONData, null, 1));
 	});
 
-	exportOutputJson2FileBtn.addEventListener('click',()=>{
+	exportOutputJson2FileBtn.addEventListener('click', async ()=>{
+		if (!await saveProcessedFromTextareaNow(true)) return;
 		myDeshbord.export2JsonFile( JSON.stringify( outputJSONData, null, 1));
 	});
 
+	clearProcessedDbBtn.addEventListener('click', async ()=>{
+		if (!confirm("Clear processed JSON from IndexedDB?")) return;
+		await browserDic.clearProcessedDictionary();
+		outputJSONData = {};
+		updateOutputTextArea();
+		alert("Processed JSON IndexedDB data cleared.");
+	});
+
 	aiTranslateBtn?.addEventListener('click', async ()=>{
-		const translatedDictionary = await translateIndexedDBWordsByAI(browserDic);
-		if (Object.keys(translatedDictionary).length) {
-			preJsonData = translatedDictionary;
-			updateInputTextArea();
+		if (!await saveInputFromTextareaNow(true)) return;
+		aiTranslationController = new AbortController();
+		setAITranslating(true);
+		updateAIProgress(0, 1);
+
+		try {
+			const translatedDictionary = await translateIndexedDBWordsByAI(browserDic, {
+				signal: aiTranslationController.signal,
+				onProgress: updateAIProgress
+			});
+			if (Object.keys(translatedDictionary).length) {
+				outputJSONData = translatedDictionary;
+				updateOutputTextArea();
+			}
+		} catch (error) {
+			if (error.name === "AbortError") {
+				alert("AI translation stopped.");
+			} else {
+				alert(`AI translation failed: ${error.message}`);
+			}
+		} finally {
+			aiTranslationController = null;
+			setAITranslating(false);
 		}
+	});
+
+	stopAiTranslateBtn?.addEventListener('click', ()=>{
+		aiTranslationController?.abort();
 	});
 
 	downloadAiDicBtn?.addEventListener('click', async ()=>{
@@ -140,36 +275,37 @@ async function setEventOnElements(myDeshbord, myJson, browserDic){
 	clearAiDicBtn?.addEventListener('click', async ()=>{
 		if (!confirm("Clear browser AI dictionary from IndexedDB?")) return;
 		await browserDic.clearDictionary();
-		preJsonData = {};
-		outputJSONData = {};
-		updateInputTextArea();
-		updateOutputTextArea();
-		alert("Browser dictionary cleared.");
+		alert("Browser AI dictionary cleared.");
 	});
 
 	//event on swap key2 value
-	swapKey2ValueBtn.addEventListener('click',()=>{
+	swapKey2ValueBtn.addEventListener('click', async ()=>{
+		if (!await saveInputFromTextareaNow(true)) return;
 		outputJSONData = myJson.swapObjKeyValue(preJsonData);
 		updateOutputTextArea();
 	});
 
 	//event for sort json
-	SortKeyAscBtn.addEventListener('click', ()=>{
+	SortKeyAscBtn.addEventListener('click', async ()=>{
+		if (!await saveInputFromTextareaNow(true)) return;
 		outputJSONData = myJson.sortObjByKey(preJsonData, true);
 		updateOutputTextArea();
 	});
 
-	SortKeyDescBtn.addEventListener('click', ()=>{
+	SortKeyDescBtn.addEventListener('click', async ()=>{
+		if (!await saveInputFromTextareaNow(true)) return;
 		outputJSONData = myJson.sortObjByKey(preJsonData, false);
 		updateOutputTextArea();
 	});
 
-	SortValueAscBtn.addEventListener('click', ()=>{
+	SortValueAscBtn.addEventListener('click', async ()=>{
+		if (!await saveInputFromTextareaNow(true)) return;
 		outputJSONData = myJson.sortObjectByValue(preJsonData, true);
 		updateOutputTextArea();
 	});
 
-	SortValueDescBtn.addEventListener('click', ()=>{
+	SortValueDescBtn.addEventListener('click', async ()=>{
+		if (!await saveInputFromTextareaNow(true)) return;
 		outputJSONData = myJson.sortObjectByValue(preJsonData, false);
 		updateOutputTextArea();
 	});
@@ -177,22 +313,28 @@ async function setEventOnElements(myDeshbord, myJson, browserDic){
 }
 
 
-async function translateIndexedDBWordsByAI(browserDic){
-	const pendingWords = await browserDic.getPendingWords();
+async function translateIndexedDBWordsByAI(browserDic, options = {}){
+	const {signal, onProgress = () => {}} = options;
+	await browserDic.addPendingWordsFromJSON(await browserDic.getInputDictionary());
+	const pendingWords = await browserDic.getPendingWordsFromInputDictionary();
+	onProgress(0, pendingWords.length);
 
 	if (!pendingWords.length) {
 		alert("No pending words found in browser dictionary.");
-		return await browserDic.getTranslatedDictionary();
+		onProgress(100, 100);
+		return await browserDic.getTranslatedDictionaryForInput();
 	}
 
 	const batchSize = 100;
 	let translatedCount = 0;
 
 	for (let i = 0; i < pendingWords.length; i += batchSize) {
+		if (signal?.aborted) throw new DOMException("AI translation stopped.", "AbortError");
 		const batch = pendingWords.slice(i, i + batchSize);
-		const translatedWords = await translateWordsByAI(batch);
+		const translatedWords = await translateWordsByAI(batch, signal);
 		await browserDic.mergeDictionary(translatedWords, true);
 		translatedCount += Object.keys(translatedWords).length;
+		onProgress(Math.min(i + batch.length, pendingWords.length), pendingWords.length);
 	}
 
 	if (translatedCount) {
@@ -201,10 +343,10 @@ async function translateIndexedDBWordsByAI(browserDic){
 		alert("No words were translated.");
 	}
 
-	return await browserDic.getTranslatedDictionary();
+	return await browserDic.getTranslatedDictionaryForInput();
 }
 
-async function translateWordsByAI(words){
+async function translateWordsByAI(words, signal){
 	const apiKey = getGeminiApiKey();
 	if (!apiKey) return {};
 
@@ -221,6 +363,7 @@ ${JSON.stringify(words)}
 			`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
 			{
 				method: "POST",
+				signal,
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					contents: [
@@ -240,6 +383,7 @@ ${JSON.stringify(words)}
 		const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 		return parseAIJSON(text);
 	} catch (error) {
+		if (error.name === "AbortError") throw error;
 		console.error("AI translation failed:", error);
 		alert(`AI translation failed: ${error.message}`);
 		return {};
@@ -274,19 +418,29 @@ function parseAIJSON(text){
 class BrowserDictionaryStore{
 	#dbName = "English2HindiTransliteration";
 	#storeName = "browserDictionary";
+	#inputStoreName = "inputDictionary";
+	#processedStoreName = "processedDictionary";
 	#dictionaryKey = "aiDictionary";
+	#inputDictionaryKey = "inputJSON";
+	#processedDictionaryKey = "processedJSON";
 	#dbPromise;
 
 	#openDB(){
 		if (this.#dbPromise) return this.#dbPromise;
 
 		this.#dbPromise = new Promise((resolve, reject) => {
-			const request = indexedDB.open(this.#dbName, 1);
+			const request = indexedDB.open(this.#dbName, 2);
 
 			request.onupgradeneeded = () => {
 				const db = request.result;
 				if (!db.objectStoreNames.contains(this.#storeName)) {
 					db.createObjectStore(this.#storeName);
+				}
+				if (!db.objectStoreNames.contains(this.#inputStoreName)) {
+					db.createObjectStore(this.#inputStoreName);
+				}
+				if (!db.objectStoreNames.contains(this.#processedStoreName)) {
+					db.createObjectStore(this.#processedStoreName);
 				}
 			};
 
@@ -298,12 +452,40 @@ class BrowserDictionaryStore{
 	}
 
 	async getDictionary(){
+		return this.#getDictionaryFromStore(this.#storeName, this.#dictionaryKey);
+	}
+
+	async getInputDictionary(){
+		return this.#getDictionaryFromStore(this.#inputStoreName, this.#inputDictionaryKey);
+	}
+
+	async saveInputDictionary(dictionary){
+		return this.#saveDictionaryToStore(this.#inputStoreName, this.#inputDictionaryKey, dictionary);
+	}
+
+	async getProcessedDictionary(){
+		return this.#getDictionaryFromStore(this.#processedStoreName, this.#processedDictionaryKey);
+	}
+
+	async saveProcessedDictionary(dictionary){
+		return this.#saveDictionaryToStore(this.#processedStoreName, this.#processedDictionaryKey, dictionary);
+	}
+
+	async clearInputDictionary(){
+		return this.saveInputDictionary({});
+	}
+
+	async clearProcessedDictionary(){
+		return this.saveProcessedDictionary({});
+	}
+
+	async #getDictionaryFromStore(storeName, dictionaryKey){
 		const db = await this.#openDB();
 
 		return new Promise((resolve, reject) => {
-			const transaction = db.transaction(this.#storeName, "readonly");
-			const store = transaction.objectStore(this.#storeName);
-			const request = store.get(this.#dictionaryKey);
+			const transaction = db.transaction(storeName, "readonly");
+			const store = transaction.objectStore(storeName);
+			const request = store.get(dictionaryKey);
 
 			request.onsuccess = () => resolve(request.result || {});
 			request.onerror = () => reject(request.error);
@@ -311,12 +493,16 @@ class BrowserDictionaryStore{
 	}
 
 	async #saveDictionary(dictionary){
+		return this.#saveDictionaryToStore(this.#storeName, this.#dictionaryKey, dictionary);
+	}
+
+	async #saveDictionaryToStore(storeName, dictionaryKey, dictionary){
 		const db = await this.#openDB();
 
 		return new Promise((resolve, reject) => {
-			const transaction = db.transaction(this.#storeName, "readwrite");
-			const store = transaction.objectStore(this.#storeName);
-			const request = store.put(dictionary, this.#dictionaryKey);
+			const transaction = db.transaction(storeName, "readwrite");
+			const store = transaction.objectStore(storeName);
+			const request = store.put(dictionary, dictionaryKey);
 
 			request.onsuccess = () => resolve(dictionary);
 			request.onerror = () => reject(request.error);
@@ -340,18 +526,76 @@ class BrowserDictionaryStore{
 		return this.#saveDictionary(currentDictionary);
 	}
 
+	async addPendingWordsFromJSON(jsonData){
+		const currentDictionary = await this.getDictionary();
+		const words = this.#extractWords(jsonData);
+
+		for (const word of words) {
+			const key = String(word).trim().toLowerCase();
+			if (!key || key.length <= 1) continue;
+
+			if (!(key in currentDictionary) || this.#isCountValue(currentDictionary[key])) {
+				currentDictionary[key] = "";
+			}
+		}
+
+		return this.#saveDictionary(currentDictionary);
+	}
+
+	#extractWords(jsonData){
+		if (Array.isArray(jsonData)) {
+			return jsonData;
+		}
+
+		if (typeof jsonData === 'object' && jsonData !== null) {
+			return Object.keys(jsonData);
+		}
+
+		return [];
+	}
+
+	#isCountValue(value){
+		return /^\d+$/.test(String(value || "").trim());
+	}
+
 	async getPendingWords(){
 		const dictionary = await this.getDictionary();
 		return Object.entries(dictionary)
-			.filter(([, value]) => !String(value || "").trim())
+			.filter(([, value]) => !String(value || "").trim() || this.#isCountValue(value))
 			.map(([word]) => word);
+	}
+
+	async getPendingWordsFromInputDictionary(){
+		const inputDictionary = await this.getInputDictionary();
+		const aiDictionary = await this.getDictionary();
+
+		return this.#extractWords(inputDictionary)
+			.map((word) => String(word).trim().toLowerCase())
+			.filter((word) => word.length > 1)
+			.filter((word) => !String(aiDictionary[word] || "").trim() || this.#isCountValue(aiDictionary[word]));
 	}
 
 	async getTranslatedDictionary(){
 		const dictionary = await this.getDictionary();
 		return Object.fromEntries(
 			Object.entries(dictionary)
-				.filter(([, value]) => String(value || "").trim())
+				.filter(([, value]) => String(value || "").trim() && !this.#isCountValue(value))
+				.sort(([a], [b]) => a.localeCompare(b))
+		);
+	}
+
+	async getTranslatedDictionaryForInput(){
+		const inputWords = new Set(
+			this.#extractWords(await this.getInputDictionary())
+				.map((word) => String(word).trim().toLowerCase())
+				.filter((word) => word.length > 1)
+		);
+		const dictionary = await this.getDictionary();
+
+		return Object.fromEntries(
+			Object.entries(dictionary)
+				.filter(([word, value]) => inputWords.has(word))
+				.filter(([, value]) => String(value || "").trim() && !this.#isCountValue(value))
 				.sort(([a], [b]) => a.localeCompare(b))
 		);
 	}
@@ -377,6 +621,9 @@ class Deshbord {
 			SortValueDescBtn : "SortValueDescBtn",
 			swapKey2ValueBtn :'swapKey2ValueBtn',
 			aiTranslateBtn: "aiTranslateBtn",
+			stopAiTranslateBtn: "stopAiTranslateBtn",
+			aiTranslateProgress: "aiTranslateProgress",
+			aiTranslatePercent: "aiTranslatePercent",
 			downloadAiDicBtn: "downloadAiDicBtn",
 			clearAiDicBtn: "clearAiDicBtn",
 			
@@ -385,14 +632,18 @@ class Deshbord {
 			copyInputBtn : 'copyInputBtn',
 			PasteInputBtn: "PasteInputBtn",
 			exportInputJson2FileBtn: 'exportInputJson2FileBtn',
+			clearInputDbBtn: "clearInputDbBtn",
 			//display textArea
 			PreTextArea : "FilePreview",
+			inputLineNumbers: "FilePreviewLineNumbers",
 			
 			//output area Btn
 			copyOutputBtn: "copyOutputBtn",
 			exportOutputJson2FileBtn: 'exportOutputJson2FileBtn',
+			clearProcessedDbBtn: "clearProcessedDbBtn",
 			//display textArea
-			sortTextArea : "sortdJSON",
+			processedTextArea : "procesedJSON",
+			processedLineNumbers: "procesedJSONLineNumbers",
 		};
 		for( const [key, value] of Object.entries(elements)){
 			this[key]= document.getElementById(value);
@@ -403,9 +654,23 @@ class Deshbord {
 		//this for change font size
 		this.fontSize.addEventListener("change", (e) => {
 			this.PreTextArea.style.fontSize = `${e.target.value}px`;
-			this.sortTextArea.style.fontSize = `${e.target.value}px`;
+			this.processedTextArea.style.fontSize = `${e.target.value}px`;
+			this.inputLineNumbers.style.fontSize = `${e.target.value}px`;
+			this.processedLineNumbers.style.fontSize = `${e.target.value}px`;
+			this.updateLineNumbers(this.PreTextArea, this.inputLineNumbers);
+			this.updateLineNumbers(this.processedTextArea, this.processedLineNumbers);
 		});
 	}  
+	updateLineNumbers(textarea, lineNumberElement) {
+		const lineCount = Math.max(textarea.value.split("\n").length, 1);
+		lineNumberElement.textContent = Array.from({ length: lineCount }, (_, index) => index + 1).join("\n");
+		this.syncLineNumberScroll(textarea, lineNumberElement);
+	}
+
+	syncLineNumberScroll(textarea, lineNumberElement) {
+		lineNumberElement.scrollTop = textarea.scrollTop;
+	}
+
 	export2JsonFile(text, defaultFileName = "untitled"){
 		try{
 			//creae blob object
@@ -499,26 +764,32 @@ class JsonOrganizer{
 	
 
 	sortObjectByValue(obj, order = true) {
-		const sorted = {};
-
-		for (const key in obj) {
-			if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-				// Nested object => recursive call
-				sorted[key] = this.sortObjectByValue(obj[key], order);
-			} else {
-				// Not nested, ignore here
-			}
+		if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+			return obj;
 		}
 
-		// If it's a flat object (i.e., no nested keys), sort directly
-		if (Object.keys(sorted).length === 0) {
-			const entries = Object.entries(obj).sort((a, b) =>
-				order ? a[1].localeCompare(b[1]) : b[1].localeCompare(a[1])
-			);
-			return Object.fromEntries(entries);
-		}
+		const valueToText = (value) => {
+			if (value === null || value === undefined) return "";
+			if (typeof value === 'object') return JSON.stringify(value);
+			return String(value);
+		};
 
-		return sorted;
+		const entries = Object.entries(obj).map(([key, value]) => [
+			key,
+			typeof value === 'object' && value !== null && !Array.isArray(value)
+				? this.sortObjectByValue(value, order)
+				: value
+		]);
+
+		entries.sort((a, b) => {
+			const firstValue = valueToText(a[1]);
+			const secondValue = valueToText(b[1]);
+			return order
+				? firstValue.localeCompare(secondValue, undefined, { numeric: true })
+				: secondValue.localeCompare(firstValue, undefined, { numeric: true });
+		});
+
+		return Object.fromEntries(entries);
 	}
 
 	swapObjKeyValue(obj) {

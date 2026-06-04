@@ -14,6 +14,9 @@
                 <label for="Font-size-range" class="labels">Font Size</label><br>
                 <input type="range" name="Font-size-range" min=10 max=50 id="FontSize-range">
             </div>
+            <div>
+                <button id="themeToggleBtn" class="theme-toggle-btn" type="button">Dark Theme</button>
+            </div>
            
             <div>
                 <p class="labels">Sort JSON By Key</p><br>
@@ -38,8 +41,13 @@
                 <p class="labels">AI Dictionary</p><br>
                 <div class="btns ai-dic-actions">
                     <button id="aiTranslateBtn">AI Translate</button>
+                    <button id="stopAiTranslateBtn" disabled>Stop</button>
                     <button id="downloadAiDicBtn">Download AI Dic</button>
                     <button id="clearAiDicBtn">Clear Browser Dic</button>
+                </div>
+                <div class="ai-progress-wrap">
+                    <progress id="aiTranslateProgress" value="0" max="100"></progress>
+                    <span id="aiTranslatePercent">0%</span>
                 </div>
             </div>
             
@@ -53,19 +61,28 @@
                     <button id="copyInputBtn">Copy</button>
                     <button id="PasteInputBtn">Paste</button>
                     <button id="exportInputJson2FileBtn">Export 2 JSON File</button>
+                    <button id="clearInputDbBtn">Clean Input DB</button>
                 </div>
-                <textarea placeholder = "Preview JSON Content" id="FilePreview"></textarea>
+                <div class="json-editor">
+                    <div class="line-numbers" id="FilePreviewLineNumbers">1</div>
+                    <textarea placeholder = "Preview JSON Content" id="FilePreview"></textarea>
+                </div>
             </div>
             <div class="output-area text-area">
                 <div class="action-btn">
                     <button id="copyOutputBtn">Copy</button>
                     <button id="exportOutputJson2FileBtn">Export 2 JSON File</button>
+                    <button id="clearProcessedDbBtn">Clean Output DB</button>
                 </div>
-                <textarea placeholder = "After change in File" id="sortdJSON" disabled></textarea>
+                <div class="json-editor">
+                    <div class="line-numbers" id="procesedJSONLineNumbers">1</div>
+                    <textarea placeholder = "After change in File" id="procesedJSON"></textarea>
+                </div>
             </div>
         </main>
     </div>
     <footer><p>&copy; Dovelop by Rajaanha</p></footer>
 </body>
+<script src="./js/themeToggle.js"></script>
 <script src="./js/jsonFileManagerByClass.js"></script>
 </html>

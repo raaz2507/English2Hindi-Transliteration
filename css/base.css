@@ -1,0 +1,59 @@
+html,body{width:100%; height:100%;}
+*{ padding:0; margin:0; box-sizing: border-box; }
+
+:root{
+  color-scheme: light;
+  --theme-page-bg: rgb(236, 236, 236);
+  --theme-page-text: rgb(24, 24, 27);
+  --theme-panel-bg: rgba(255, 255, 255, 0.72);
+  --theme-panel-strong-bg: rgba(135, 207, 235, 0.8);
+  --theme-control-bg: rgba(194, 255, 192, 0.692);
+  --theme-input-panel-bg: rgba(36, 208, 255, 0.4);
+  --theme-output-panel-bg: rgba(36, 255, 83, 0.4);
+  --theme-editor-bg: rgb(165, 229, 255);
+  --theme-editor-text: rgb(12, 20, 28);
+  --theme-editor-gutter-bg: rgba(255, 255, 255, 0.45);
+  --theme-muted-text: rgba(0, 0, 0, 0.6);
+  --theme-border: rgba(0, 0, 0, 0.18);
+  --theme-shadow: rgba(0, 0, 0, 0.2);
+  --theme-button-bg: rgba(76, 175, 79, 0.78);
+  --theme-button-text: rgb(255, 255, 255);
+  --theme-footer-bg: rgba(255, 192, 203, 0.9);
+  --theme-overlay-bg: rgba(255, 255, 255, 0.88);
+}
+
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --theme-page-bg: rgb(16, 20, 28);
+  --theme-page-text: rgb(236, 240, 246);
+  --theme-panel-bg: rgba(30, 38, 52, 0.82);
+  --theme-panel-strong-bg: rgba(40, 58, 76, 0.92);
+  --theme-control-bg: rgba(33, 54, 45, 0.9);
+  --theme-input-panel-bg: rgba(18, 75, 96, 0.76);
+  --theme-output-panel-bg: rgba(28, 96, 53, 0.76);
+  --theme-editor-bg: rgb(22, 30, 42);
+  --theme-editor-text: rgb(237, 243, 252);
+  --theme-editor-gutter-bg: rgba(255, 255, 255, 0.08);
+  --theme-muted-text: rgba(237, 243, 252, 0.7);
+  --theme-border: rgba(255, 255, 255, 0.18);
+  --theme-shadow: rgba(0, 0, 0, 0.55);
+  --theme-button-bg: rgba(71, 139, 98, 0.92);
+  --theme-button-text: rgb(255, 255, 255);
+  --theme-footer-bg: rgba(47, 55, 70, 0.92);
+  --theme-overlay-bg: rgba(10, 14, 22, 0.74);
+}
+
+body{
+  color: var(--theme-page-text);
+}
+
+.theme-toggle-btn{
+  min-width:max-content;
+  padding:6px 12px;
+  border:1px solid var(--theme-border);
+  border-radius:8px;
+  background:var(--theme-button-bg);
+  color:var(--theme-button-text);
+  cursor:pointer;
+  box-shadow:0 3px 8px var(--theme-shadow);
+}
