@@ -1,5 +1,5 @@
 import { Dictionary } from "./Hindi2EnglishDic.js";
-import { EngWord } from "./EnglishWord.js";
+import { ignoreWords } from "./ignoreWoldList.js";
 
 document.addEventListener('DOMContentLoaded', ()=>{
 	//ye main-core hai janha text translate hota hai
@@ -417,35 +417,28 @@ class JSONFileMange{
 		this.#saveJSON2File(data,saveWithCount);
 	}
 
-	convertArre2JSON(wordList, saveWithCount){
+	convertArre2JSON(wordList, saveWithCount = false){
+		if (!Array.isArray(wordList)) return {};
+
 		let data = {};
-		let filteredWords = filterEngWord(wordList).map(word => word.toLowerCase());
-		// const saveWithCount = saveFileSetWithCount();
-		if (saveWithCount) {
-			// Count frequency
-			filteredWords.forEach(word => {
-				if (word.length > 1) {
-					data[word] = (data[word] || 0) + 1;
-				}
-			});
-		} else {
-			// Simple empty JSON keys
-			filteredWords.forEach(word => {
-				if (word.length > 1) {
-					data[word] = "";
-				}
-			});
+
+		for (const item of wordList) {
+			if (!item) continue;
+
+			const word = String(item).trim().toLowerCase();
+
+			if (word.length <= 1 || ignoreWords.has(word)) {
+				continue;
+			}
+
+			data[word] = saveWithCount ? (data[word] || 0) + 1 : "";
 		}
+
 		if (saveWithCount){
 			data= sortObjectByValue(data);
 		}
 		return data;
 
-		function filterEngWord(wordArr) {
-			const engWord = EngWord; //fetchJson('EnglishWord.json');
-			const filterdList = wordArr.filter((word) => !engWord.includes(word));
-			return filterdList;
-		}
 		function sortObjectByValue(obj) {
 			return Object.fromEntries(
 					Object.entries(obj).sort(([, a], [, b]) => b - a)
