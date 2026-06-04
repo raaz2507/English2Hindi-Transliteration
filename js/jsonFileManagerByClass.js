@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const JsonMagicSorter = new JsonOrganizer();
+	const browserDic = new BrowserDictionaryStore();
 	const myDeshbord = new Deshbord();
-	setEventOnElements(myDeshbord, JsonMagicSorter);
+	setEventOnElements(myDeshbord, JsonMagicSorter, browserDic);
 });
 function setEventOnElementsNew(myDeshbord, myJson){
 	const {SortKeyAscBtn, SortKeyDescBtn, SortValueAscBtn, SortValueDescBtn, swapKey2ValueBtn}=myDeshbord;
@@ -12,13 +13,21 @@ function setEventOnElementsNew(myDeshbord, myJson){
 	let preJsonData={};
 	let outputJSONData={};
 	
-	(function getJsonFormLocalStorage(){
+	await (async function getJsonFormLocalStorage(){
 		const jsonData= localStorage.getItem("JSON_Dic_Data");
 		console.log(jsonData);
-		if (jsonData){
+		if (jsonData && jsonData !== "null"){
 			preJsonData=	JSON.parse(jsonData); // localStorage से text लो
 			updateInputTextArea();
 			localStorage.removeItem("JSON_Dic_Data"); //to empty local storage
+			return;
+		}
+
+		localStorage.removeItem("JSON_Dic_Data");
+		const translatedDictionary = await browserDic.getTranslatedDictionary();
+		if (Object.keys(translatedDictionary).length) {
+			preJsonData = translatedDictionary;
+			updateInputTextArea();
 		}
 	})();
 	const actionmap={
@@ -32,10 +41,11 @@ function setEventOnElementsNew(myDeshbord, myJson){
 		if (handler) handler();
 	});
 }
-function setEventOnElements(myDeshbord, myJson){
+async function setEventOnElements(myDeshbord, myJson, browserDic){
 	const {SortKeyAscBtn, SortKeyDescBtn, SortValueAscBtn, SortValueDescBtn, swapKey2ValueBtn}=myDeshbord;
 	const {openFileBtn, copyInputBtn, PasteInputBtn, exportInputJson2FileBtn}=myDeshbord; 
 	const	{copyOutputBtn, exportOutputJson2FileBtn}=myDeshbord;
+	const {aiTranslateBtn, downloadAiDicBtn, clearAiDicBtn}=myDeshbord;
 	const {PreTextArea, sortTextArea}=myDeshbord;
 
 	
@@ -114,6 +124,29 @@ function setEventOnElements(myDeshbord, myJson){
 		myDeshbord.export2JsonFile( JSON.stringify( outputJSONData, null, 1));
 	});
 
+	aiTranslateBtn?.addEventListener('click', async ()=>{
+		const translatedDictionary = await translateIndexedDBWordsByAI(browserDic);
+		if (Object.keys(translatedDictionary).length) {
+			preJsonData = translatedDictionary;
+			updateInputTextArea();
+		}
+	});
+
+	downloadAiDicBtn?.addEventListener('click', async ()=>{
+		const translatedDictionary = await browserDic.getTranslatedDictionary();
+		myDeshbord.export2JsonFile(JSON.stringify(translatedDictionary, null, 2), "Hindi2EnglishDicByAi");
+	});
+
+	clearAiDicBtn?.addEventListener('click', async ()=>{
+		if (!confirm("Clear browser AI dictionary from IndexedDB?")) return;
+		await browserDic.clearDictionary();
+		preJsonData = {};
+		outputJSONData = {};
+		updateInputTextArea();
+		updateOutputTextArea();
+		alert("Browser dictionary cleared.");
+	});
+
 	//event on swap key2 value
 	swapKey2ValueBtn.addEventListener('click',()=>{
 		outputJSONData = myJson.swapObjKeyValue(preJsonData);
@@ -144,6 +177,190 @@ function setEventOnElements(myDeshbord, myJson){
 }
 
 
+async function translateIndexedDBWordsByAI(browserDic){
+	const pendingWords = await browserDic.getPendingWords();
+
+	if (!pendingWords.length) {
+		alert("No pending words found in browser dictionary.");
+		return await browserDic.getTranslatedDictionary();
+	}
+
+	const batchSize = 100;
+	let translatedCount = 0;
+
+	for (let i = 0; i < pendingWords.length; i += batchSize) {
+		const batch = pendingWords.slice(i, i + batchSize);
+		const translatedWords = await translateWordsByAI(batch);
+		await browserDic.mergeDictionary(translatedWords, true);
+		translatedCount += Object.keys(translatedWords).length;
+	}
+
+	if (translatedCount) {
+		alert(`${translatedCount} words translated and saved in browser dictionary.`);
+	} else {
+		alert("No words were translated.");
+	}
+
+	return await browserDic.getTranslatedDictionary();
+}
+
+async function translateWordsByAI(words){
+	const apiKey = getGeminiApiKey();
+	if (!apiKey) return {};
+
+	const prompt = `
+Convert these roman/English words to Hindi Devanagari transliteration only.
+Do not translate meaning.
+Return only a valid JSON object where each key is the original word and each value is the Hindi transliteration.
+Words:
+${JSON.stringify(words)}
+`;
+
+	try {
+		const response = await fetch(
+			`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+			{
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					contents: [
+						{
+							parts: [{ text: prompt }]
+						}
+					]
+				})
+			}
+		);
+
+		if (!response.ok) {
+			throw new Error(`Gemini API error: ${response.status}`);
+		}
+
+		const data = await response.json();
+		const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+		return parseAIJSON(text);
+	} catch (error) {
+		console.error("AI translation failed:", error);
+		alert(`AI translation failed: ${error.message}`);
+		return {};
+	}
+}
+
+function getGeminiApiKey(){
+	const storageKey = "gemini_api_key";
+	let apiKey = localStorage.getItem(storageKey);
+
+	if (!apiKey) {
+		apiKey = prompt("Enter Gemini API key:");
+		if (apiKey) {
+			localStorage.setItem(storageKey, apiKey.trim());
+		}
+	}
+
+	return apiKey?.trim();
+}
+
+function parseAIJSON(text){
+	const cleanText = text.replace(/```json|```/g, "").trim();
+
+	try {
+		return JSON.parse(cleanText);
+	} catch {
+		const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
+		return jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+	}
+}
+
+class BrowserDictionaryStore{
+	#dbName = "English2HindiTransliteration";
+	#storeName = "browserDictionary";
+	#dictionaryKey = "aiDictionary";
+	#dbPromise;
+
+	#openDB(){
+		if (this.#dbPromise) return this.#dbPromise;
+
+		this.#dbPromise = new Promise((resolve, reject) => {
+			const request = indexedDB.open(this.#dbName, 1);
+
+			request.onupgradeneeded = () => {
+				const db = request.result;
+				if (!db.objectStoreNames.contains(this.#storeName)) {
+					db.createObjectStore(this.#storeName);
+				}
+			};
+
+			request.onsuccess = () => resolve(request.result);
+			request.onerror = () => reject(request.error);
+		});
+
+		return this.#dbPromise;
+	}
+
+	async getDictionary(){
+		const db = await this.#openDB();
+
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction(this.#storeName, "readonly");
+			const store = transaction.objectStore(this.#storeName);
+			const request = store.get(this.#dictionaryKey);
+
+			request.onsuccess = () => resolve(request.result || {});
+			request.onerror = () => reject(request.error);
+		});
+	}
+
+	async #saveDictionary(dictionary){
+		const db = await this.#openDB();
+
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction(this.#storeName, "readwrite");
+			const store = transaction.objectStore(this.#storeName);
+			const request = store.put(dictionary, this.#dictionaryKey);
+
+			request.onsuccess = () => resolve(dictionary);
+			request.onerror = () => reject(request.error);
+		});
+	}
+
+	async mergeDictionary(newDictionary, overwriteFilled = false){
+		const currentDictionary = await this.getDictionary();
+
+		for (const [word, value] of Object.entries(newDictionary || {})) {
+			const key = String(word).trim().toLowerCase();
+			if (!key || key.length <= 1) continue;
+
+			const normalizedValue = String(value || "").trim();
+
+			if (overwriteFilled || !(key in currentDictionary)) {
+				currentDictionary[key] = normalizedValue;
+			}
+		}
+
+		return this.#saveDictionary(currentDictionary);
+	}
+
+	async getPendingWords(){
+		const dictionary = await this.getDictionary();
+		return Object.entries(dictionary)
+			.filter(([, value]) => !String(value || "").trim())
+			.map(([word]) => word);
+	}
+
+	async getTranslatedDictionary(){
+		const dictionary = await this.getDictionary();
+		return Object.fromEntries(
+			Object.entries(dictionary)
+				.filter(([, value]) => String(value || "").trim())
+				.sort(([a], [b]) => a.localeCompare(b))
+		);
+	}
+
+	async clearDictionary(){
+		return this.#saveDictionary({});
+	}
+}
+
 class Deshbord {
 	constructor(JsonMagicSorter) {
 		this.#getElements();
@@ -159,6 +376,9 @@ class Deshbord {
 			SortValueAscBtn : "SortValueAscBtn",
 			SortValueDescBtn : "SortValueDescBtn",
 			swapKey2ValueBtn :'swapKey2ValueBtn',
+			aiTranslateBtn: "aiTranslateBtn",
+			downloadAiDicBtn: "downloadAiDicBtn",
+			clearAiDicBtn: "clearAiDicBtn",
 			
 			//input-area Btn
 			openFileBtn : "openFileBtn",
@@ -186,13 +406,13 @@ class Deshbord {
 			this.sortTextArea.style.fontSize = `${e.target.value}px`;
 		});
 	}  
-	export2JsonFile(text){
+	export2JsonFile(text, defaultFileName = "untitled"){
 		try{
 			//creae blob object
 			const blob = new Blob([text], { type: 'text/plain' });
 			
-			let fileName=prompt("enter File Name");
-			if (!fileName) fileName = "untitled";
+			let fileName=prompt("enter File Name", defaultFileName);
+			if (!fileName) fileName = defaultFileName;
 			
 			//create temp Objrect
 			const link = document.createElement('a');

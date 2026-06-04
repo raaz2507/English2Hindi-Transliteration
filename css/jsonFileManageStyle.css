@@ -49,6 +49,11 @@ body{
   width:100px;
   margin:2px 6px;
 }
+.controls .ai-dic-actions button{
+  width:auto;
+  background-color: rgba(76, 175, 79, 0.7);
+  color:white;
+}
 main{
   width:100%;
   /* padding: 10px; */
