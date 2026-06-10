@@ -315,27 +315,50 @@ async function setEventOnElements(myDeshbord, myJson, browserDic){
 
 async function translateIndexedDBWordsByAI(browserDic, options = {}){
 	const {signal, onProgress = () => {}} = options;
+
 	await browserDic.addPendingWordsFromJSON(await browserDic.getInputDictionary());
+
 	const pendingWords = await browserDic.getPendingWordsFromInputDictionary();
 	onProgress(0, pendingWords.length);
 
 	if (!pendingWords.length) {
 		alert("No pending words found in browser dictionary.");
+
 		onProgress(100, 100);
-		return await browserDic.getTranslatedDictionaryForInput();
+
+		return {
+			translated: await browserDic.getTranslatedDictionaryForInput(),
+			notTranslated: {}
+		};
 	}
 
 	const batchSize = 100;
 	let translatedCount = 0;
+	const notTranslated = {};
 
 	for (let i = 0; i < pendingWords.length; i += batchSize) {
-		if (signal?.aborted) throw new DOMException("AI translation stopped.", "AbortError");
+		if (signal?.aborted) {
+			throw new DOMException("AI translation stopped.", "AbortError");
+		}
+
 		const batch = pendingWords.slice(i, i + batchSize);
+
 		const translatedWords = await translateWordsByAI(batch, signal);
-		await browserDic.mergeDictionary(translatedWords, true);
-		translatedCount += Object.keys(translatedWords).length;
+
+		if (Object.keys(translatedWords).length) {
+			await browserDic.mergeDictionary(translatedWords, true);
+			translatedCount += Object.keys(translatedWords).length;
+		} else {
+			// अगर पूरा batch translate नहीं हुआ, तो words अलग object में डाल दो
+			for (const word of batch) {
+				notTranslated[word] = (notTranslated[word] || 0) + 1;
+			}
+		}
+
 		onProgress(Math.min(i + batch.length, pendingWords.length), pendingWords.length);
 	}
+
+	const translated = await browserDic.getTranslatedDictionaryForInput();
 
 	if (translatedCount) {
 		alert(`${translatedCount} words translated and saved in browser dictionary.`);
@@ -343,7 +366,10 @@ async function translateIndexedDBWordsByAI(browserDic, options = {}){
 		alert("No words were translated.");
 	}
 
-	return await browserDic.getTranslatedDictionaryForInput();
+	return {
+		translated,
+		notTranslated
+	};
 }
 
 async function translateWordsByAI(words, signal){
